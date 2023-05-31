@@ -8,4 +8,4 @@ in this directory. Still tunned!
 
 How to reach Yufeng?
 
-Using Waggle-sensor slack or email [yufeng.luo@anl.gov](mailto:yufeng.luo@anl.gov).
+Using Waggle-sensor slack or email [brookluo34@hotmail.com](mailto:brookluo34@hotmail.com).

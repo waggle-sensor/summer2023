@@ -4,6 +4,16 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 
 ## Week 05/29 -- 06/04
 
+### 05/31 Wed
+
+- Finished implementing the dataloader for sage images data, now the loader works
+- Tested the loading function with a single-gpu and it works without distribution package, i.e., do it sequentially.
+- Discussed with Dario about the cloud prediction project, and Dario suggested two frameworks:
+  - Two component: Joint embedding architecture (JEA) + single transformer fed with embedding vector from the JEA. JEA for image characterization, while the second transformer is for prediction. See this two papers: [DETR](https://arxiv.org/abs/2005.12872), [I-JEPA](https://arxiv.org/abs/2301.08243)
+  - Single component: JEA but with two branches feeding different time of the sky image to let one NN model (current image + time input) match the embedding vector of that of the other NN model with future image.
+- TODO: switch out ResNet and make sure the training works with a single gpu before putting the large scale training.
+- Will continue to download more SAGE data for training.
+
 ### 05/30 Tue
 
 - Transferred local data to ALCF
@@ -12,15 +22,14 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 - 03/10 - 03/24 data has been downloaded.
 - The data format is
   - original unmodified JPG RGB images are in `rgb` directory
-  - processed JPG images with only left half (optical images) are in `processed` folder
-  - thermal images in `.csv` file with celsius degree per pixel
-  - metadata file for everyday and each node are in `sage_meta` folder
-  - to check data consistency, I created a txt file for each JPG & thermal image pair and put them in `pairs` folder, and ordered them by SAGE node name.
+  - processed JPG images with only left half (optical images) are in `processed` folder under `rgb` directory
+  - thermal images in `.csv` file with celsius degree per pixel are in `thermal` folder
+  - metadata files created from querying using `sage_data_client` are in `sage_meta` folder
+  - to check data consistency, I created a txt file for each JPG & thermal image pair and put them in `pairs` folder, and put in directories with SAGE node name.
 
 ### 05/29 Mon
 
 Memorial day, no work.
-
 
 ## Week 05/22 -- 05/28
 
@@ -39,7 +48,6 @@ Memorial day, no work.
 - Still don’t have access to ALCF yet, so will try to use google colab for testing
 - The W056 node physical location changed from ANL to San Deigo around 05/20/2023, so there might be some changes in the image quality
 - Daytime and night time calculations for each node would need the physical location information to get the timezone. This hasn’t been done yet!
-
 
 ### 05/24 Wed
 
@@ -68,4 +76,3 @@ Memorial day, no work.
   - A sample code to query: ​​https://github.com/RBhupi/Konza_Mobo_Analysis/blob/main/mobo_data_download_nc.py
   - Figure out how many images are available at each position and what’s the production rate for each position
   - Want “thermal.celsius.csv” in file name.
-

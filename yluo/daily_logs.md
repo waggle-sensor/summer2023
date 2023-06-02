@@ -17,6 +17,10 @@ likely would yield a meaningless results as the batch size is too small (4) to f
   3. Download more image data. Now only have 7000 images but would need more.
   images are being downloaded right now to ALCF.
 
+<img src="./plots/training_loss_two_panels.png" alt="isolated" width="800"/>
+<img src="./plots/learning_rate.png" alt="isolated" width="400"/>
+
+
 ### 06/01 Thu
 
 - Make the Quad chart!

@@ -1,8 +1,10 @@
 # ANL summer 2023 project for Yufeng Luo
 
 This directory has Yufeng's summer research project at ANL. Yufeng
-will mainly work using this private [git repo](https://github.com/Brookluo/cloud-pred.git).
-You must want to ask for permission first otherwise you will see a 404 page.
+will mainly work using these two git repos:
+- [Cloud images](https://github.com/Brookluo/cloud-pred.git) (private)
+- [VICReg](git@github.com:Brookluo/vicreg-sage.git) (public)
+
 Yufeng's meeting note should be on the google drive, and daily logs will be available
 in this directory. Still tunned!
 

@@ -4,6 +4,28 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 
 ## Week 05/29 -- 06/04
 
+### 06/02 Fri
+
+- Attended DSL seminar for a review and discussion of recent update on Scientific Machine Learning.
+Unsupervised LG-Net might be interesting to consider for solving well-posed PDEs
+- Attempted to train the modified VICReg using a single GPU but have to modify the batch size. This 
+likely would yield a meaningless results as the batch size is too small (4) to fit into single GPU.
+- Discussed with Dario and found out the training was too slow and not useful as aforementioned.
+- After the discussion, there are three things to do:
+  1. Parallelize the current single thread VICReg
+  2. Increase the batch size. This can be done after parallelization
+  3. Download more image data. Now only have 7000 images but would need more.
+  images are being downloaded right now to ALCF.
+
+### 06/01 Thu
+
+- Make the Quad chart!
+- Changed the VICReg model to fit two different inputs
+  - Two instances of the same architecture (i.e., ResNet) -- done
+  - Two different architectures -- TODO
+- Need to modify the loss function in order to back-propagate to both branches
+- Finished the modification today and successfully ran the code on a single GPU
+
 ### 05/31 Wed
 
 - Finished implementing the dataloader for sage images data, now the loader works

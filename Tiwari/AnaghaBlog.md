@@ -49,4 +49,27 @@ Other:
 </details>
 
 
+<br/>
+
+
+<details>
+<summary> June 2, 2023 </summary>
+
+### June 2, 2023
+  
+  **Goal:**  Use quadrant images from `Plugin-Image-Sampler` filter from Waggle nodes and add Uber Stickers to each quadrant (if a car is present)
+  
+  Worked on writing several functions to read and traverse through one set of quadrant images, add stickers to each car present, and save new image:
+    
+  * Used OpenCV `imshow` and glob library to read in image and first divide into quadrants
+  * Wrote a `setSticker` function to overlay sticker on a chosen section of the image (specifically on the back or front of a car)
+  * Parsed through each of the 4 quadrants and called function to overlay sticker on cars if possible (key pressed to skip or move onto next image)
+  * Saved each augmented image into the same original file
+  
+Other:
+  * Received ANL login - created Github SSH key and LCRC account to gain access to Waggle Project
+
+</details>
+
+
 

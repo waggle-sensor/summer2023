@@ -1,0 +1,2 @@
+Monday, June 5th 2023
+Created a python block in GNU radio. The goal of the block was to only allow a signal through if it was recieving a byte input. This block is the first step towards making the code automatically detect and separate lightning signals. The next step will be creating a block that will turn a one byte inpulse into a longer signal. I'm thinking a while loop to stall time and cause the output to be a one for longer.

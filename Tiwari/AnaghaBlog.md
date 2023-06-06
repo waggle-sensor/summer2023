@@ -72,4 +72,30 @@ Other:
 </details>
 
 
+<br/>
+
+
+<details>
+<summary> June 5, 2023 </summary>
+
+### June 5, 2023
+  
+  **Goal:**  Augment all node images in folder and include randomization feature - traverse through every image (from chosen timespan & node) and add random rideshare logo/sticker on coordinates of choice
+  
+  Worked on writing several functions to read and traverse through an entire folder of node images, divide them into quadrants, add random sticker in chosen location, and save new image:
+    
+  * Used OpenCV `imshow` and glob library to read in each image and divide into quadrants
+  * Wrote `random_sticker` function to choose random rideshare-vehicle sticker from given folder (from Uber + Lyft)
+  * Wrote a `setSticker` function to overlay random sticker on a chosen section of the image (specifically on the back or front of a car)
+  * Parsed through each of the 4 quadrants of every image, and call function to overlay sticker on cars if possible (key pressed to skip or move onto next image)
+  * Saved each augmented image into the same original file
+  
+Other:
+  * Set up workstation computer, downloaded necessary files/applications and started coding!
+  * Committed updated python notebook to GitHub Image_Augmentation folder
+  * Downloaded images from node W07B `image-sampler` plugin for the entire month of May (~800 images downloaded) - inspired by Python script + file from Sean
+
+</details>
+
+
 

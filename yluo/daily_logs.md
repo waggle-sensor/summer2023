@@ -2,6 +2,29 @@
 
 Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
+## Week 06/05 -- 06/11
+
+### 06/06 Tue
+
+- Modified `DataLoader` to fit the containerized training environment,
+as there are volume binding that changed the original file path
+- Tested the containerized training environment. This should conclude
+the development for VICReg preprocessing and training, now move to change
+the model
+- Started to train VICReg with ResNet-50 on `full-node` queue
+- Challenged by the batch system on ThetaGPU system, `cobalt` is an imposter
+batch system using the "same" syntax as the more popular `PBS` batch job
+management system.
+
+### 06/05 Mon
+
+- Truncated the rgb image to similar FoV as the thermal camera and downsampled
+the image to reduce its size.
+- Tested the training on both single-gpu and single-node with 8 gpus
+- Maximum batch-size for 8 gpu on  the `full-node` queue is 128
+- Wrote `.def` to create singularity image for training
+- Can use conda to setup the environment as well, need to decide later.
+
 ## Week 05/29 -- 06/04
 
 ### 06/02 Fri

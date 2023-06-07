@@ -98,4 +98,25 @@ Other:
 </details>
 
 
+<br/>
+
+
+<details>
+<summary> June 5, 2023 </summary>
+
+### June 6, 2023
+  
+  **Goal:**  Start creating training dataset using Node W07B May 1-31, 2023 images.
+  
+  Add ridesharing vehicle stickers onto images from Node W07B in the Month of May:
+    
+  * Used image augmentation functions (from RideSharingAddition notebook) to augment more than **960** images 
+  * Saved each augmented image into new quadrant file
+  
+Other:
+  * The YoloV7 object identification machine learning framework will be used to create the machine learning ridesharing vehicle model
+  * End goal is to finish training, validating, and testing ML model by end of June for Waggle nodes deployed at O'Hare Airport
+
+</details>
+
 

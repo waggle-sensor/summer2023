@@ -4,6 +4,28 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 
 ## Week 06/05 -- 06/11
 
+### 06/08 Thu
+
+- Presented at the group meeting
+- Chose to use DINO's vision transformer, will document this thing
+- Tested ViT in VICReg with the current modifications
+- Start to train VICReg + ViT, and continue training VICReg + ResNet
+- Assembling a testing and validation dataset to evaluate these two models and do clusterization analysis
+
+### 06/07 Wed
+
+- Came to two realizations for Vision Transformers (ViT)
+  - Augmentation is the human prior for network. The feature destroyed in
+augmentation process should be things we don't care
+  - Training dataset construction is very critical, which dictates the attention of the network
+- Trained VICReg + ResNet-50 on a full-node. Training loss and learning rate are shown below.
+- Start to swap in ViT to the model part and test using a single thread training.
+  - Somehow the hugging-face implementation "official" for ViT does **not** work
+  - DINO's vision transformer, claimed to be taken from above, does work!
+
+<img src="./plots/ResNet_dist_loss.png" alt="isolated" width="800"/>
+<img src="./plots/ResNet_dist_learninig_rate.png" alt="isolated" width="400"/>
+
 ### 06/06 Tue
 
 - Modified `DataLoader` to fit the containerized training environment,

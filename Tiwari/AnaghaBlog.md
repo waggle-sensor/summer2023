@@ -102,7 +102,7 @@ Other:
 
 
 <details>
-<summary> June 5, 2023 </summary>
+<summary> June 6, 2023 </summary>
 
 ### June 6, 2023
   
@@ -116,6 +116,28 @@ Other:
 Other:
   * The YoloV7 object identification machine learning framework will be used to create the machine learning ridesharing vehicle model
   * End goal is to finish training, validating, and testing ML model by end of June for Waggle nodes deployed at O'Hare Airport
+
+</details>
+
+
+<br/>
+
+
+<details>
+<summary> June 7, 2023 </summary>
+
+### June 7, 2023
+  
+  **Goal:**  Worm on training dataset using Node W026 and W02C May 1-31, 2023 images.
+  
+  Add ridesharing vehicle stickers onto images from Node W026 and W02C in the Month of May:
+    
+  * Used image augmentation functions (from RideSharingAddition notebook) to augment more than **2000** images (1200 from W026 and 800 from W02C) 
+  * Saved each augmented image into new quadrant file
+  
+Other:
+  * Starting to learn about YoloV7 object identification framework + bounding boxes needed to identify stickers on top of cars
+  * May need to run model on Google Colab depending on computer GPU capabilities
 
 </details>
 

@@ -128,7 +128,7 @@ Other:
 
 ### June 7, 2023
   
-  **Goal:**  Worm on training dataset using Node W026 and W02C May 1-31, 2023 images.
+  **Goal:**  Work on training dataset using Node W026 and W02C May 1-31, 2023 images.
   
   Add ridesharing vehicle stickers onto images from Node W026 and W02C in the Month of May:
     
@@ -138,6 +138,31 @@ Other:
 Other:
   * Starting to learn about YoloV7 object identification framework + bounding boxes needed to identify stickers on top of cars
   * May need to run model on Google Colab depending on computer GPU capabilities
+
+</details>
+
+
+<br/>
+
+
+<details>
+<summary> June 8, 2023 </summary>
+
+### June 8, 2023
+  
+  **Goal:** Start learning (follow/read tutorials, etc.) about YoloV7 object identification ML framework
+  
+ Start creating Bounding Boxes for sample (30-image) dataset using YoloLabels and train and test data on Google Colab
+    
+  * Read several tutorials + documentation on YoloV7, its used cases, and basic code blocks on training and testing a custom dataset
+  * Set up YoloLabel software to add bounding boxes around the ridesharing stickers - labelled small sample dataset for practice
+  * Installed YoloV7 packages, divided sample dataset into training, validation, and testing folders (along with image annotations .txt files)
+  * Using Google Colab: trained & tested model - very poor performance but main purpose was to get accustomed to YoloV7 framework
+  
+Other:
+  * Group Research Meeting: May need to add bounding boxes around individual ridesharing stickers or around cars - see which produces optimal results
+  * Make sure to use a key metric (i.e. identifying correct number of ridesharing vehicles in picture) to compare different versions of ML model -> seeing which method of bounding boxes produces a number closer to the correct key metric - thanks to Sean for this suggestion
+  * Additional thoughts: Can try to use ViLT model proposed by HuggingFace to see its performance - no supervision or previous labeling required (idea proposed by Sean)
 
 </details>
 

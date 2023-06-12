@@ -2,6 +2,62 @@
 
 Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
+## Week 06/05 -- 06/11
+
+### 06/09 Fri
+
+- Continued the training for VICReg + ViT to ensure both models (ResNet and ViT) have 150 training epochs
+- Evaluate the trained models using the embedding vector for new images.
+- Discussed with Dario about next steps
+  - for DINO, separate thermal IR images into three channels by setting temperature threshold
+  - for all-sky camera, refer to [05/31](#0531-wed), and [this section](#cloud_pred).
+- Downloaded new images, and optimized the processing workflow to build index cache. This should make the processing 
+and pair-creating much faster.
+- TODO: show some clusterization results next week
+
+### 06/08 Thu
+
+- Presented at the group meeting
+- Chose to use DINO's vision transformer, will document this thing
+- Tested ViT in VICReg with the current modifications
+- Start to train VICReg + ViT, and continue training VICReg + ResNet
+- Assembling a testing and validation dataset to evaluate these two models and do clusterization analysis
+
+### 06/07 Wed
+
+- Came to two realizations for Vision Transformers (ViT)
+  - Augmentation is the human prior for network. The feature destroyed in
+augmentation process should be things we don't care
+  - Training dataset construction is very critical, which dictates the attention of the network
+- Trained VICReg + ResNet-50 on a full-node. Training loss and learning rate are shown below.
+- Start to swap in ViT to the model part and test using a single thread training.
+  - Somehow the hugging-face implementation "official" for ViT does **not** work
+  - DINO's vision transformer, claimed to be taken from above, does work!
+
+<img src="./plots/ResNet_dist_loss.png" alt="isolated" width="800"/>
+<img src="./plots/ResNet_dist_learninig_rate.png" alt="isolated" width="400"/>
+
+### 06/06 Tue
+
+- Modified `DataLoader` to fit the containerized training environment,
+as there are volume binding that changed the original file path
+- Tested the containerized training environment. This should conclude
+the development for VICReg preprocessing and training, now move to change
+the model
+- Started to train VICReg with ResNet-50 on `full-node` queue
+- Challenged by the batch system on ThetaGPU system, `cobalt` is an imposter
+batch system using the "same" syntax as the more popular `PBS` batch job
+management system.
+
+### 06/05 Mon
+
+- Truncated the rgb image to similar FoV as the thermal camera and downsampled
+the image to reduce its size.
+- Tested the training on both single-gpu and single-node with 8 gpus
+- Maximum batch-size for 8 gpu on  the `full-node` queue is 128
+- Wrote `.def` to create singularity image for training
+- Can use conda to setup the environment as well, need to decide later.
+
 ## Week 05/29 -- 06/04
 
 ### 06/02 Fri
@@ -34,7 +90,7 @@ likely would yield a meaningless results as the batch size is too small (4) to f
 
 - Finished implementing the dataloader for sage images data, now the loader works
 - Tested the loading function with a single-gpu and it works without distribution package, i.e., do it sequentially.
-- Discussed with Dario about the cloud prediction project, and Dario suggested two frameworks:
+- <a id="cloud_pred"></a>Discussed with Dario about the cloud prediction project using all-sky camera, and Dario suggested two frameworks:
   - Two component: Joint embedding architecture (JEA) + single transformer fed with embedding vector from the JEA. JEA for image characterization, while the second transformer is for prediction. See this two papers: [DETR](https://arxiv.org/abs/2005.12872), [I-JEPA](https://arxiv.org/abs/2301.08243)
   - Single component: JEA but with two branches feeding different time of the sky image to let one NN model (current image + time input) match the embedding vector of that of the other NN model with future image.
 - TODO: switch out ResNet and make sure the training works with a single gpu before putting the large scale training.

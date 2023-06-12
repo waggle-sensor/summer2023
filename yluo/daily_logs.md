@@ -4,6 +4,17 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 
 ## Week 06/05 -- 06/11
 
+### 06/09 Fri
+
+- Continued the training for VICReg + ViT to ensure both models (ResNet and ViT) have 150 training epochs
+- Evaluate the trained models using the embedding vector for new images.
+- Discussed with Dario about next steps
+  - for DINO, separate thermal IR images into three channels by setting temperature threshold
+  - for all-sky camera, refer to [05/31](#0531-wed), and [this section](#cloud_pred).
+- Downloaded new images, and optimized the processing workflow to build index cache. This should make the processing 
+and pair-creating much faster.
+- TODO: show some clusterization results next week
+
 ### 06/08 Thu
 
 - Presented at the group meeting
@@ -79,7 +90,7 @@ likely would yield a meaningless results as the batch size is too small (4) to f
 
 - Finished implementing the dataloader for sage images data, now the loader works
 - Tested the loading function with a single-gpu and it works without distribution package, i.e., do it sequentially.
-- Discussed with Dario about the cloud prediction project, and Dario suggested two frameworks:
+- <a id="cloud_pred"></a>Discussed with Dario about the cloud prediction project using all-sky camera, and Dario suggested two frameworks:
   - Two component: Joint embedding architecture (JEA) + single transformer fed with embedding vector from the JEA. JEA for image characterization, while the second transformer is for prediction. See this two papers: [DETR](https://arxiv.org/abs/2005.12872), [I-JEPA](https://arxiv.org/abs/2301.08243)
   - Single component: JEA but with two branches feeding different time of the sky image to let one NN model (current image + time input) match the embedding vector of that of the other NN model with future image.
 - TODO: switch out ResNet and make sure the training works with a single gpu before putting the large scale training.

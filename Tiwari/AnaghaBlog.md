@@ -167,3 +167,47 @@ Other:
 </details>
 
 
+<br/>
+
+
+<details>
+<summary> June 9, 2023 </summary>
+
+### June 9, 2023
+  
+  **Goal:** Start annotating data using YoloLabel platform
+  
+ Start creating Bounding Boxes around ridesharing sticker images for each node's data
+    
+  * Read several tutorials + installation guides on YoloLabel, and the proper method to annotate data (bounding box should only enclose object, and no more)
+  * Set up YoloLabel software to add bounding boxes around the ridesharing stickers
+  * Started adding bounding boxes for Nodes W07B - currently adding bounding boxes around specific ridesharing stickers (and not the entire car) - may have to test accuracy of model against key metric (# of ridesharing vehicles in image) to test performance
+  
+Other:
+  * Played around with ViLT model by HuggingFace (followed basic tutorial and asked question on pre-trained model - poor performance, but will have to look into it more later!)
+
+</details>
+
+
+<br/>
+
+
+<details>
+<summary> June 10, 2023 </summary>
+
+### June 10, 2023
+  
+  **Goal:** Finish annotating data with YoloLabel platform and randomly divide data for model training, validation, and testing
+  
+ Finish creating Boundary Boxes for all nodes, divided data for each node into folders
+    
+  * Finished creating boundary boxes for Nodes W02C and W026 - added boxes around specific ridesharing stickers in images - total ~2960 labelled images + text annotation files
+  * Wrote Python script (`divide_data.ipynb`) to randomly divide original images + corresponding labelled text files into 3 folders (train, val, test) using Python's `random`, `glob`, and `shutil` libraries
+  
+Other:
+  * Finished 3 required trainings
+
+</details>
+
+
+

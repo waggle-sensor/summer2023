@@ -2,8 +2,8 @@
 
 This directory has Yufeng's summer research project at ANL. Yufeng
 will mainly work using these two git repos:
-- [Cloud images](https://github.com/Brookluo/cloud-pred.git) (private)
-- [VICReg](git@github.com:Brookluo/vicreg-sage.git) (public)
+- [Cloud images](https://github.com/Brookluo/cloud-pred) (private)
+- [VICReg](https://github.com/Brookluo/vicreg-sage) (public)
 
 Yufeng's meeting note should be on the google drive, and daily logs will be available
 in this directory. Still tunned!

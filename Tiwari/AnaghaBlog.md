@@ -1,4 +1,4 @@
-# Anagha's Daily Work Blog
+# Anagha's Daily Work Blog!
 
 #### Here, I will write daily updates for the work done on the Waggle-Sensor project, specifically in understanding feasibility of Waggle sensors in anayzing traffic flow and concentration of ride-sharing vehicles through the streets of Chicago.
 
@@ -206,6 +206,30 @@ Other:
   
 Other:
   * Finished 3 required trainings
+
+</details>
+
+
+
+<br/>
+
+
+<details>
+<summary> June 13, 2023 </summary>
+
+### June 13, 2023
+  
+  **Goal:** Start creating YoloV7 model trained on custom rideshare vehicle data
+  
+ Uploaded data + Yolov7 folder to Google drive, created python script to train model
+    
+  * Upload divided data into Google Drive
+  * Used basic Yolov7 tutorial to train model on custom data (75 epochs - took about 5-6 hrs), used custom `weight.py`
+  * Tested model with 15% confidence level on test images - classified 0 images as rideshare vehicles :'(
+  * Read guides explaining how to train model with transfer learning approach, next goal is to use pretrained model and train with additional custom data for higher accuracy
+  
+Other:
+  * Finished 2 required trainings
 
 </details>
 

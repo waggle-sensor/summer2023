@@ -2,6 +2,35 @@
 
 Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
+## Week 06/12 -- 06/18
+
+### 06/14 Wed
+
+- Removed one model from the training so we just need to calculate loss and backpropagate for one model. The training will be more efficient
+- Start to calculate embeddings for the test sample
+- Got attention maps from vision transformer, but it didn't present any information?
+
+### 06/13 Tue
+
+- Found two image issues:
+  1. Images before ~03/14 didn't have positions attached to their file names. Solution: Leave the files here.
+  2. Some images (~2000) have discrepancy between position reported on RGB files (`.jpg`) and thermal files (`.csv`). There are two
+plugins trying to take images causing a race condition. The image pair is technically correct, but one of the position is wrong because
+one plugin tries to move the camera continuously and the other one is taking images disrupting the position recording. Solution:
+move those files to `bad_pairs` directory, so they don't interfere with the training/testing
+- Found another potential issue with the current implementation of the framework:
+  - backpropagation might be incorrect because the two branches had two different models. Checked this one, and from the original paper
+this shouldn't be a issue as the derivatives for `x` and `y` branches in their implementation are calculated back.
+  - However, the current implementation has a duplicate model as the two models (IR and RGB) learn the same information. I will remove one
+model before next training. I evaluated the two models and found them identical by comparing embeddings
+- Now, data is ready and models are ready too for evaluation.
+
+### 06/12 Mon
+
+- ALCF is offline, so I have to wait
+- Worked on a paper on reproducibility to be published
+- Read DINOv2 paper
+
 ## Week 06/05 -- 06/11
 
 ### 06/09 Fri

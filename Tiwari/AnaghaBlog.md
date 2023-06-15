@@ -234,4 +234,27 @@ Other:
 </details>
 
 
+<br/>
+
+
+<details>
+<summary> June 14, 2023 </summary>
+
+### June 14, 2023
+  
+  **Goal:** Create transfer-learned model using PyTorch pretrained weights + CNN
+  
+ Uploaded node data, used transfer-learning approach to improve accuracy of rideshare sticker recognition, analyzed loss-charts + accuracy, tested model with images
+    
+  * Upload W07B randomly divided data into Google Drive (saved into 3 folders, each with 2 class - Normal and Rideshare)
+  * Used Pytorch convolutional neural network model and pretrained weights (`IMAGENET1K_V1`) to reset and train last layer of model with custom data (approx. 2000 images)
+  * Final accuracy of 91.0526%, trained twice with 25 epochs each (cnn model also finetuned with custom data)
+  * Created epochs vs. training loss chart - training loss decreased from 0.6976 to 0.3578 throughout first 25 epochs
+  
+Other:
+  * Finished several required trainings
+
+</details>
+
+
 

@@ -129,6 +129,9 @@ def requesting_cameras_position_information(Query = None):
 
     resp = camera_command('10.31.81.11', 'ptzcontrol.cgi', payload)
     print(resp.text)
+    info = str(resp.text)
+    with open('/home/waggle/PycharmProjects/pythonProject/test.txt', 'w') as f:
+        f.write(info)
     return resp
 
 def moving_to_preset_position(PresetName = None):
@@ -145,13 +148,17 @@ def moving_to_preset_position(PresetName = None):
 
     camera_command('10.31.81.11', 'ptzcontrol.cgi', payload)
 
-def moving_to_home_position():
+def moving_to_home_position(Channel = None):
 
     # http://<Device IP>/stw-cgi/<value>.cgi?msubmenu=<value1>&action=<value2>[&<parameter(s)>=<value(s)3>]
     # ex.(http://10.31.81.11/stw-cgi/ptzcontrol.cgi?msubmenu=home&action=control&Channel=0)
     # payload = {msubmenu: <value1>, action: <value2>, <parameter(s)>: <value(s)3>}
     # camera_command(<Device IP>, <value>.cgi, payload)
-    payload = {'msubmenu': 'home', 'action': 'control', 'Channel': '0'}
+
+    if Channel:
+        payload['Channel'] = Channel
+
+    payload = {'msubmenu': 'home', 'action': 'control'}
     camera_command('10.31.81.11', 'ptzcontrol.cgi', payload)
 
 def area_zoom(X1 = None, X2 = None, Y1 = None, Y2 = None, TileWidth = None, TileHeight = None, Type = None):
@@ -211,26 +218,58 @@ def stop_control():
     payload = {'msubmenu': 'stop', 'action': 'control', 'OperationType': 'All'}
     camera_command('10.31.81.11', 'ptzcontrol.cgi', payload)
 
-def movement_control():
+def movement_control(Direction = None, MoveSpeed = None):
 
     # http://<Device IP>/stw-cgi/<value>.cgi?msubmenu=<value1>&action=<value2>[&<parameter(s)>=<value(s)3>]
     # ex.(http://10.31.81.11/stw-cgi/ptzcontrol.cgi?msubmenu=move&action=control&Direction=LeftDown&MoveSpeed=3)
     # payload = {msubmenu: <value1>, action: <value2>, <parameter(s)>: <value(s)3>}
     # camera_command(<Device IP>, <value>.cgi, payload)
-    payload = {'msubmenu': 'move', 'action': 'control', 'Direction': 'LeftDown', 'MoveSpeed': '3'}
+
+    payload = {'msubmenu': 'move', 'action': 'control'}
+
+    if Direction:
+        payload['Direction'] = Direction
+
+    if MoveSpeed:
+        payload['MoveSpeed'] = MoveSpeed
+
     camera_command('10.31.81.11', 'ptzcontrol.cgi', payload)
 
-def swing_control():
+def swing_control(Channel = None, Mode = None):
 
     # http://<Device IP>/stw-cgi/<value>.cgi?msubmenu=<value1>&action=<value2>[&<parameter(s)>=<value(s)3>]
-    # ex.(http://10.31.81.11/stw-cgi/ptzcontrol.cgi?msubmenu=swing&action=control&Channel=0&Mode=Pan&Mode=Tilt)
+    # ex.(http://10.31.81.11/stw-cgi/ptzcontrol.cgi?msubmenu=swing&action=control&Channel=0&Mode=PanTilt)
     # payload = {msubmenu: <value1>, action: <value2>, <parameter(s)>: <value(s)3>}
     # camera_command(<Device IP>, <value>.cgi, payload)
 
     payload = {'msubmenu': 'swing', 'action': 'control', 'Channel':'0', 'Mode': 'Pan', 'Mode': 'Tilt'}
+
+    if Channel:
+        payload['Channel'] = Channel
+
+    if Mode:
+        payload['Mode'] = Mode
+
     # Pan = (0, +-180); Tilt = (0, +-110) at 90 degrees camera flips; Zoom = (0, +-40)
     camera_command('10.31.81.11', 'ptzcontrol.cgi', payload)
 
-relative_move(Zoom = -30)
+def applications():
+
+    # http://<Device IP>/stw-cgi/<value>.cgi?msubmenu=<value1>&action=<value2>[&<parameter(s)>=<value(s)3>]
+    # ex.(http://10.31.81.11/stw-cgi/opensdk.cgi?msubmenu=apps&action=view)
+    # payload = {msubmenu: <value1>, action: <value2>, <parameter(s)>: <value(s)3>}
+    # camera_command(<Device IP>, <value>.cgi, payload)
+
+    payload = {'msubmenu': 'apps', 'action': 'view'}
+    # Pan = (0, +-180); Tilt = (0, +-110) at 90 degrees camera flips; Zoom = (0, +-40)
+    resp = camera_command('10.31.81.11', 'opensdk.cgi', payload)
+    print(resp.text)
+    return resp
+
+
+open("test.txt", mode="r")
+
+#requesting_cameras_position_information('Pan,Tilt,Zoom')
 #zoom_out()
-#area_zoom(7000, 10000, 7000, 10000)
+#area_zoom(7000, 10000, 2000, 5000)
+#moving_to_home_position()

@@ -312,4 +312,30 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> June 19, 2023 </summary>
+
+### June 19, 2023
+  
+  **Goal:** Create new ml model using finetuning approach with YoloV7 pretrained model
+  
+ Finetuned Yolov7 model (previously trained on COCO dataset)
+    
+  * Uploaded all images into alternative drive account (to access additional GPU without waiting
+  * Created new image recognition model using pretrained YoloV7 model, and finetuning/custom training final layers with custom dataset
+    * 100 epochs (`results.txt` file generated after) 
+  * Created extra testing dataset using W07A node images
+  
+Other:
+  * Finished all required trainings (only SEC160 left)
+  * GPU in Colab ran out :(
+
+</details>
+
+
+
 

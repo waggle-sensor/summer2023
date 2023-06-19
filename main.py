@@ -9,7 +9,7 @@ from requests.auth import HTTPDigestAuth
 # action=<value> = Action
 # [&<parameter>=<value>] = Parameter
 
-def camera_command(Device_IP, value_cgi, payload):
+def camera_command(Device_IP, value_cgi, x, payload):
 
     # Function used to send commands to the camera
     # Args:
@@ -19,7 +19,7 @@ def camera_command(Device_IP, value_cgi, payload):
 
     url = 'http://' + Device_IP + '/stw-cgi/' + value_cgi
 
-    resp = requests.get(url, auth=HTTPDigestAuth('admin', 'why1not@'), params=payload)
+    resp = requests.get(url, auth=HTTPDigestAuth('admin', x), params=payload)
     print(resp.status_code)
     print(resp.url)
     return resp
@@ -46,7 +46,10 @@ def relative_move(Pan = None, Tilt = None, Zoom = None):
 
         payload['Zoom'] = Zoom
 
-    camera_command('10.31.81.11', 'ptzcontrol.cgi', payload)
+    print(enter password)
+    x = input()
+
+    camera_command('10.31.81.11', 'ptzcontrol.cgi', x, payload)
 
 def attributes_information():
 
@@ -268,6 +271,8 @@ def applications():
 
 
 open("test.txt", mode="r")
+
+
 
 #requesting_cameras_position_information('Pan,Tilt,Zoom')
 #zoom_out()

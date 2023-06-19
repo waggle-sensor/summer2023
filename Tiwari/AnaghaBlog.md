@@ -258,3 +258,58 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> June 15, 2023 </summary>
+
+### June 15, 2023
+  
+  **Goal:** Create new training transfer-learned model with `ResNet18` pretrained weights for **entire** Chicago dataset
+  
+ Created training transfer learned model and developed Validation and Training Accuracy and Loss Charts
+    
+  * Randomly divided nodes W07B, W026, and W02C data into training and validation folders
+  * Uploaded node W07B, W026, and W02C folders (zip files) to Colab - changed python script to account for entire dataset
+  * Trained transfer-learned model with `Resnet18 IMAGENET1K_V1` preweights - 2 stages
+    * Stage 1: Loading pretrained model, optimizing all parameters with custom data - finetuning Convolutional Neural network
+    * Stage 2: Loading pretrained model, optimizing only final few layers with custom data
+  * Made updates to training python script and included epoch accuracy and loss data feature to store data values
+  * Created training + validation loss and accuracy stage 1 charts (see `Plots` folder)
+  
+Other:
+  * Finished 2 required trainings
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> June 16, 2023 </summary>
+
+### June 16, 2023
+  
+  **Goal:** Create new training transfer-learned model with `ResNet50 IMAGENET1K_V2`  pretrained weights for **entire** Chicago dataset
+  
+ Created ResNet50 transfer learned model and developed Validation and Training Accuracy and Loss Charts
+    
+  * Does ResNet50 Model perform better than ResNet18?
+    * ResNet50: Bottleneck Residual Building Block = faster training, higher accuracy, updated model with more training data
+  * Final accuracy of `0.936968` for Stage 1 (optimizing all model parameters)   
+  * Created training + validation loss and accuracy stage 1 charts (see `Plots` folder, image 2)
+  
+Other:
+  * Finished 3 required trainings (only 5 left!)
+  * GPU in Colab ran out :(
+
+</details>
+
+
+
+

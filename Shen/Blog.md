@@ -21,3 +21,8 @@ Today I worked my first remote day. I began the day by utilizing the function th
 # Monday June 19th, 2023
 
 Today I worked on downloading all the images over to my local directory in their correct respective solar irradiance classes. I eventually figured it out but found that some images were still dark even though the time that they were taken were already filtered so that it removed darker images. This is when I was notified by Seongha that the images were taken in UTC time while the data were taken in CST time; granted, there was a feature on the sage website to check at which times the photos were taken, and I had completely forgotten to check if there was a timezone difference. So, I worked more on cleaning data and pairing up the images and the data based on their timestamps. I should be able to finish tomorrow since I have most of the functions to do it and downloading images should also be able to be done by tomorrow. 
+
+
+# Tuesday June 20th, 2023
+
+Today I finished cleaning up the final data that accounts for the timezone difference between the images and the data. I again used my function that I had created earlier in order to spot differences between the timestamps so that I could get rid of unnecessary either data or image that did not have a corresponding image/data. I also managed to download all of these on to my local machine by writing a python script that sorts each image into a directory based on a the column 'class' in the dataframe. Seongha has notified me that I should use the resnet50 pretrained model in pytorch for my first model. After I downloaded these images onto my local machine and uploaded them onto google drive, I began researching how I plan to finetune the model in order to get my first test runs going.  

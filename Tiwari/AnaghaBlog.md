@@ -312,4 +312,56 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> June 19, 2023 </summary>
+
+### June 19, 2023
+  
+  **Goal:** Create new ml model using finetuning approach with YoloV7 pretrained model
+  
+ Finetuned Yolov7 model (previously trained on COCO dataset)
+    
+  * Uploaded all images into alternative drive account (to access additional GPU without waiting
+  * Created new image recognition model using pretrained YoloV7 model, and finetuning/custom training final layers with custom dataset
+    * 100 epochs (`results.txt` file generated after) 
+  * Created extra testing dataset using W07A node images
+  
+Other:
+  * Finished all required trainings (only SEC160 left)
+  * GPU in Colab ran out :(
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> June 20, 2023 </summary>
+
+### June 20, 2023
+  
+  **Goal:** Create new ML model using finetuning approach with YoloV7 pretrained model
+  
+ Finetuned Yolov7 model (previously trained on COCO dataset) using training stages
+    
+  * Previous model not able to finish training due to GPU limits (only trained about 40 epochs)
+  * New approach: Train model in stages of 10 epochs at once
+    * Used pre-trained COCO dataset Yolov7 weight for stage1, for additional stages use previous 10 epoch `best.pt` weight generated from model
+  * Only 4 stages (total 40 epochs) ran before GPU allocated in Colab ran out
+  * Talked to Sean about Jupyter offerings in ALCF without GPU restrictions
+  
+Other:
+  * Yolov7 finetuned model may be a promising approach, as Recall & Precision values are increasing using the pre-10 epoch generated `best.pt` weights
+
+</details>
+
+
+
 

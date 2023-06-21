@@ -26,3 +26,7 @@ Today I worked on downloading all the images over to my local directory in their
 # Tuesday June 20th, 2023
 
 Today I finished cleaning up the final data that accounts for the timezone difference between the images and the data. I again used my function that I had created earlier in order to spot differences between the timestamps so that I could get rid of unnecessary either data or image that did not have a corresponding image/data. I also managed to download all of these on to my local machine by writing a python script that sorts each image into a directory based on a the column 'class' in the dataframe. Seongha has notified me that I should use the resnet50 pretrained model in pytorch for my first model. After I downloaded these images onto my local machine and uploaded them onto google drive, I began researching how I plan to finetune the model in order to get my first test runs going.  
+
+# Wednesday June 21st, 2023
+
+Today I attended two of the required seminars for SULI students. Then I began to do more research on how to exactly train the last layer of the model. After reading a few tutorials I got started and managed to finish a rough first model using pytorch and resnet18 model. This first model did not go exactly as planned since the accuracy was very very low. I think that I just do not have enough data for each class so it makes the accuracy very low especially since for about half the classes I only have about 200-300 images. I plan on trying to either reduce the number of classes or augment the images to have more data per class.

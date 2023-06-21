@@ -349,16 +349,21 @@ Other:
   
   **Goal:** Create new ML model using finetuning approach with YoloV7 pretrained model
   
- Finetuned Yolov7 model (previously trained on COCO dataset) using training stages
+ Finetuned using training stages + create new **YoloV8** model
     
   * Previous model not able to finish training due to GPU limits (only trained about 40 epochs)
   * New approach: Train model in stages of 10 epochs at once
     * Used pre-trained COCO dataset Yolov7 weight for stage1, for additional stages use previous 10 epoch `best.pt` weight generated from model
   * Only 4 stages (total 40 epochs) ran before GPU allocated in Colab ran out
-  * Talked to Sean about Jupyter offerings in ALCF without GPU restrictions
+  * Generated new YoloV8 model trained on custom data using 30 epochs (may need to train for longer) and with `yolov8n.pt` weights
+    * Precision: `0.804`, Recall: `0.803 ` 
+    * See `Plots` and `Yolov8_Model` file for precision-recall chart and test predictions
+  * YoloV8 model detects stickers in large image quadrants (not able to detect rideshare stickers given full image)
   
 Other:
-  * Yolov7 finetuned model may be a promising approach, as Recall & Precision values are increasing using the pre-10 epoch generated `best.pt` weights
+  * Yolov8 custom-trained model may be a promising approach, as Recall & Precision values are ~80% and predictions are much better than YoloV7 with just 30 epochs!!
+  * Talked to Sean about Jupyter offerings in ALCF without GPU restrictions
+
 
 </details>
 

@@ -8,3 +8,6 @@ I created a basic model based on ResNet for transfer learning then worked out ge
 
 **June 21st 2023**
 Pulled image data from W083 from "2023-02-01T01:00:00Z" to "2023-06-10T01:00:00Z". Camera is pointed at the same location as W014 but a slightly different angle. Also got the classifier working with an test set accuracy of 83%. There are a lot of false positives, and I'm thinking of oversampling the no-snow images to deal with that particular problem and hopefully that helps. If that doesn't work I'll need to start analyzing which images the model is struggling with to see if I can spot any patterns. 
+
+**June 22nd 2023**
+Had my first research meeting, I'll have slides ready for next time. Wasn't exactly sure what was expected so I'll be more prepared. Ran into some problems (mostly my own fault) with my pytorch installation and got them all fixed. also decided to remain consistent and count any visible snow as snow. After training ResNet50 for just 9 epochs it achieved an accuracy of 0.980, a precision of 0.988, and a  recall of 0.978. All the false positives are pictures from night and the false negatives are at night or have very little snow at the ground. Regardless, these are very good results and are promising. I'll try ResNet18 to see if I can achieve similar results with a shallower model.

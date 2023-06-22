@@ -1,7 +1,13 @@
 # **HANWHA_API**
 
-**To use code must import python libraries:**
-import argparse
-import requests
-from requests.auth import HTTPDigestAuth
+Hello and welcome! Here are some examples of how to use this api for the XNP-6400RW PTZ camera:
+
+## **Required Python Libraries**
+- import argparse
+- import requests
+- from requests.auth import HTTPDigestAuth
+
+## **Terminal Command Examples**
+
+### Pan 20&deg
 

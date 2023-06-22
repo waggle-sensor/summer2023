@@ -369,4 +369,36 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> June 21, 2023 </summary>
+
+### June 21, 2023
+  
+  **Goal:** Train YolOV8 model, create new rideshare dataset with noise + darker stickers
+  
+ Trained YoloV8 model using 2 training stages, created new pipeline for noisy images
+    
+  * First stage: Trained pretrained YoloV8 model using `yolov8n.pt` weights for 30 epochs
+    * Precision: `0.804`, Recall: `0.803`  
+  * Second stage: Custom trained YoloV8 model using `best.pt` weights for 30 additional eopchs
+    * Precision: `0.834`, Recall: `0.787`
+  * Tried training for third stage - precision and recall declined (rejected) 
+  * Altered image_augmentation pipeline to include addition of random noise (from s&p, salt, pepper, speckle, gaussian) and increased rideshare sticker darkness
+    * Performed major bug fix that previously prevented certain images from being altered/overlayed with stickers due to numpy array issues
+    * See `Adding_noise.ipynb` in Image Augmentation folder 
+  * Started creating new augmented dataset using May and June data from node `W07A`
+    * Target: 1000 rideshare images with an additional 100-150 background  
+   
+Other:
+  * Target 100 epochs or 3-4 training stages of 30 epochs each once GPU access from ALCF is provided
+
+
+</details>
+
+
+
 

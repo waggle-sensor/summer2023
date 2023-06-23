@@ -401,4 +401,50 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> June 22, 2023 </summary>
+
+### June 22, 2023
+  
+  **Goal:** Finish creating new rideshare dataset with noise + darker stickers
+  
+ Downloaded Node W07A images and augmented 1000 images with rideshare stickers
+    
+  * Downloaded W07A node images from May and June from Sage portal  
+  * Used noise pipeline (see `Adding_Noise.ipynb` for updated functions on adding random noise to pictures + darker versions of stickders
+    * Augmented 1200 images for new training dataset on YoloV8 
+   
+Other:
+  * 3rd Research Meeting! Suggestions on looking at YoloV8 # of layers for more accuracy?
+
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> June 23, 2023 </summary>
+
+### June 23, 2023
+  
+  **Goal:** Create bounding boxes for training dataset
+  
+ Create bounding boxes for 800 images
+    
+  * Drew bounding boxes around rideshare stickers for 800 images using YoloLabel!
+  * Target: create new training dataset + annotations, and upload to Google drive by Monday 
+   
+Other:
+
+
+</details>
+
 

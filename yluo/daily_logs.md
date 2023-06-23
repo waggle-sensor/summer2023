@@ -2,6 +2,123 @@
 
 Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
+
+## Week 06/19 -- 06/25
+
+### 06/23 Fri
+
+- Automated the attention map generation step.
+- Visually inspected some attention maps generated and found the `checkpoint_vit_rgb16_ir8` performed fairly well!
+- Started training with smaller patches (`vit_rgb16_ir4_bs128_ep150`) on 6 nodes and `vit_small` architecture (`vitsmall_rgb16_ir8_bs128_ep150`)
+on 2 nodes.
+- Will need to check whether the training will run into not enough memory issue.
+- Discussed with Dario about DINO training, will finalize it on Monday.
+  - Train with 3-channel RGB + artificial 3-channel IR images. The 3-ch IR is made by separating temperate into three bins.
+  - Need to put cloud into one bins. Will talk to Bhupendra about possible cloud temperature.
+  - Training strategy
+    - Training alternatively with RGB and IR images, and alternating the image type for both branches at the same time.
+    - Train two models: RGB teacher + IR student, and IR teacher + RGB student
+
+### 06/22 Thu
+
+- Presented at the week meeting [Link](https://docs.google.com/presentation/d/1Oqt4WQ0bol99NMFtKYLR8YZGVwwUif35_zIo5Mjw0L4/edit?usp=sharing)
+- Work on visualization and clusterization
+- Got TSNE plots with PCA reduction
+- Automated the embedding generation process
+- Found there was a jump on learning rate for `checkpoint_vit_rgb16_ir8`, which could be caused by changing training epoch from 100 to 150
+this changed the optimizer schedule. DO NOT change training epoch after the training started!
+
+### 06/21 Wed
+
+- The distributed training worked! Here are the changes made to add MPI:
+
+1. For training code, before import `init_dist_mode` function or any MPI/NCCL initialization,
+add this code
+
+```py
+try:
+    os.environ['CUDA_VISIBLE_DEVICES']=os.environ['OMPI_COMM_WORLD_LOCAL_RANK']
+except:
+    print('Not OMPI_COMM_WORLD_LOCAL_RANK in this run!')
+```
+
+2. Then, use `utils.py` included in `self_supervised_bird_analysis` 
+[Github link](https://github.com/dariodematties/self_supervised_bird_analysis/blob/main/utils.py)
+3. Make sure MPI library is installed inside the container and is compatible with host system
+MPI library. MPI ranks must be one rank per hardware thread (nproc x num_nodes).
+4. Test it with multi-nodes!
+
+- With a working MPI, can now train bigger model. Started to train `vit_rgb16_ir8_bs128_ep150`
+- Document the workflow
+
+### 06/20 Tue
+
+- Continued to refine the workflow with some details on the template file, adding more macro options
+- Started to work on the distributed memory training. Initially would like to use NVidia NCCL library
+because it was built-in for CUDA but Dario has a working version of CUDA+MPI, so I will start to test
+the working MPI solution first.
+
+### 06/19 Mon
+
+- Refine ML training workflow
+  - Wrote a template with Macros to submit jobs
+  - Wrote a python script to substitute macros in template with input and create target training directory
+  - Reorganize data repository to standardize file access
+- Now, the ML training process has a standardized, reproducible workflow with isolated directory to hold
+model in the training as well as evaluation data.
+- The environment is reproducible with the help of singularity container
+- Data can be trackable with the pair index files.
+- Working on parallelizing the training into multiple nodes
+
+
+## Week 06/12 -- 06/18
+
+## 06/16 Fri
+
+- Use DINO's `visualize_attention.py` to generate attention map and there are three heads for `vit_tiny` architecture
+- The resolution for IR is too low, so reduce the patch size for IR images while keep patch size for RGB the same
+- There will be lots of training, so need to refine the whole workflow and keep track of everything.
+- Started to train `vit_tiny` with RGB patch size 16, IR 8, and batch size 128. `checkpoint_vit_rgb16_ir8`
+
+## 06/15 Thursday
+
+- Presented at the [weekly meeting](https://docs.google.com/presentation/d/1zUZoETjtCwAetGjYBYzTIRs_4WDyj9cckZk5EvsfaQI/edit?usp=sharing)
+- Made some visualization
+  - Corner plots to show internal relationship between parameters
+  - Attention maps from Vision transformers
+- the resolution for IR image is low so the patch size must be smaller to create high
+resolution attention map. But this created memory problem because smaller patches will
+yield more blocks to train on and thus single node does not
+have enough to fit both models and smaller patches. Need to use multi-node with distributed memory.
+
+
+### 06/14 Wed
+
+- Removed one model from the training so we just need to calculate loss and backpropagate for one model. The training will be more efficient
+- Start to calculate embeddings for the test sample
+- Got attention maps from vision transformer, but it didn't present any information?
+
+### 06/13 Tue
+
+- Found two image issues:
+  1. Images before ~03/14 didn't have positions attached to their file names. Solution: Leave the files here.
+  2. Some images (~2000) have discrepancy between position reported on RGB files (`.jpg`) and thermal files (`.csv`). There are two
+plugins trying to take images causing a race condition. The image pair is technically correct, but one of the position is wrong because
+one plugin tries to move the camera continuously and the other one is taking images disrupting the position recording. Solution:
+move those files to `bad_pairs` directory, so they don't interfere with the training/testing
+- Found another potential issue with the current implementation of the framework:
+  - backpropagation might be incorrect because the two branches had two different models. Checked this one, and from the original paper
+this shouldn't be a issue as the derivatives for `x` and `y` branches in their implementation are calculated back.
+  - However, the current implementation has a duplicate model as the two models (IR and RGB) learn the same information. I will remove one
+model before next training. I evaluated the two models and found them identical by comparing embeddings
+- Now, data is ready and models are ready too for evaluation.
+
+### 06/12 Mon
+
+- ALCF is offline, so I have to wait
+- Worked on a paper on reproducibility to be published
+- Read DINOv2 paper
+
 ## Week 06/05 -- 06/11
 
 ### 06/09 Fri

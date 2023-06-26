@@ -14,7 +14,7 @@ Hello and welcome! Here are some examples of how to use this api for the XNP-640
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
+- $ python3 main.py --ipAddress **Device IP** --username <username> --password <password> --absolute_Pan 20
 - In short form:
 - $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ap 20
 

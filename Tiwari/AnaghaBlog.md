@@ -448,3 +448,31 @@ Other:
 </details>
 
 
+
+<br/>
+
+
+
+<details>
+<summary> June 26, 2023 </summary>
+
+### June 26, 2023
+  
+  **Goal:** Create a new YoloV8 model with better precision & recall
+  
+ Trained new YoloV8 model for training with new, augmented dataset (with noise/darkened images)
+    
+  * Created new model using pretrained COCO dataset `yolov8n.pt` weights
+    * Trained model for 170 epochs (implementing early stop mechanism of 50 epochs)
+  * Validation precision `0.837` and recall `0.805` were higher than previous (2 stage) model with precision `0.834` and recall `0.787` 
+  * Will use this model when training with augmented dataset
+  * Also looked at possible traffic videos to use to test model prediction?
+    * Ask about rideshare vehicle video to test model (may have to use openCV to overlay rideshare stickers on regular traffic video) 
+   
+Other:
+  * Attended Bob's Writing A Research Report workshop!
+    * Discussed over important parts of a research report and examples of sample introductions, abstracts, and results
+
+</details>
+
+

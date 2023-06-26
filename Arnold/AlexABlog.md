@@ -18,3 +18,16 @@ This morning my installation decided that sqlite3 wasn't properly installed, so 
 I used the same model model as the snow classifier based on Resnet50. It had final test metrics of {'epoch': 10, 'accuracy': 0.9746478873239437, 'precision': 0.9577039274924471, 'recall': 0.9875389408099688, 'loss': 0.3476980721866581 which are similar to the snow classifier as well. In fact, some of the mistakes look to be ones that I miscategorized when labeling the data. One issue is that the majority of the incorrectly labeled images are at night, so this could be an area for improvement but overall the model seems to be doing well.
 
 One worry I have is that the images look too similar to each other so the model is really just memorizing, but given that the data is being used specifically for the Bad River this may not be an issue? Going to schedule a meeting for next week to discuss next steps/outling the problem and the best design decisions I can make to suit it.
+
+**June 24th 2023**
+Wrapped up initial ice classifier today. It didn't converge quite as quickly as the snow classifer, so I trained it for 1.5x longer to get better results.
+
+I also checked through the images form W083 for wild rice, and in the June images I can clearly see the wild rice in the floating-leaf stage, but I don't see them standing up yet. Just from quickly looking online it looks like that usually happens in July so we can check back later in the summer to see if that's visible from the camera, and I expect it will be. As for the question about detecting boat wakes I don't think that would be possible with the current data since the camera doesn't collect images often enough to realistically get pictures of boats with wakes.
+
+Also made a better data pipeline. I was using ImageFolder which I figured out was significantly increasing my training time by >6x which was very bad. This change also allows me to more easily apply augmentations to the training set should I need to. Overall makes my life alot easier and faster. I was very confused as to why it was taking so long so it was good to see that I wasn't going crazy.
+
+List of questions so far
+- Do we need to augment the image dataset to make it more generalizable, or does it not matter as much since it's only for images from this site?
+- How to pull image metadata? (trying to figure this out today, documentation on using images is lacking)
+- Updates on other data sources/other problems to solve
+- Target accuracy for the classifiers

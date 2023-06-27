@@ -2,6 +2,29 @@
 
 Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
+## Week 06/26 -- 07/02
+
+### 06/26 Mon
+
+- Had a deep discussion with Dario and Bhupendra about the scope of the project and potential deliverables
+  - Current goal: **understand what a RGB model learned from the IR model counterpart**
+  - Two aspect to consider:
+    1. the common features RGB and IR models both learned.
+    2. the mapping from RGB image to IR image learned by models. (This is important because IR images are less available than RGB images)
+  - To evaluate models based on the above two criterions, need to have following steps:
+      1. narrow down the scope: train and test images with certain features (i.e., night time images, sky images, cloud images)
+      2. cluster the images
+         1. if labeled data available, apply the same clustering on labeled data to understand some physical meaning of the cluster
+         2. if no labeled data, try some meta-analysis with the information from node (location, node number, sky position, local time -> day, night)
+  - some deliverables:
+    - Object segementation and detection
+    - cloud characteristics
+      - thick and thin clouds?
+      - object differentiation, sky vs. ground
+    - other unexpected results from clustering
+  - Additional idea to understand RGB vs. IR model: use an identical framework + model to train RGB + RGB pair. Where the second 
+  RGB image, converted to grayscale image, replaces the paired IR image but remains the same shape and resolution as IR image
+- Issue to resolve: data cannot be fitted in memory for analysis task due to too many (~100,000) embedding vectors
 
 ## Week 06/19 -- 06/25
 

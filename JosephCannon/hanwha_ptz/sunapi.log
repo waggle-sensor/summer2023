@@ -1,0 +1,5 @@
+INFO:root:Started
+INFO:root:camera_command({'msubmenu': 'relative', 'action': 'control', 'Pan': 80, 'Tilt': 30, 'Zoom': None})
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): 10.31.81.11:80
+DEBUG:urllib3.connectionpool:http://10.31.81.11:80 "GET /stw-cgi/ptzcontrol.cgi?msubmenu=relative&action=control&Pan=80&Tilt=30 HTTP/1.1" 401 347
+DEBUG:urllib3.connectionpool:http://10.31.81.11:80 "GET /stw-cgi/ptzcontrol.cgi?msubmenu=relative&action=control&Pan=80&Tilt=30 HTTP/1.1" 200 2

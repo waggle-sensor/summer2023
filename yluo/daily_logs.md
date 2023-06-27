@@ -21,7 +21,6 @@ categories of images is very clear and the relationships between image pairs hav
 - 
 <img src="./plots/vit_image.png" alt="isolated" width="400"/>
 <img src="./plots/vit_all_clusters.png" alt="isolated" width="400"/>
-!
 
 ### 06/26 Mon
 

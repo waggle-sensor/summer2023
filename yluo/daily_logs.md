@@ -18,7 +18,7 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 - Calculated embeddings with `vitsmall_rgb16_ir8_bs128_ep150` model.
 - Clustering with `vit_rgb16_ir4_bs128_ep150`, result is shown below. The result is incredible as the separation between different 
 categories of images is very clear and the relationships between image pairs have been learned as well.
-- 
+
 <img src="./plots/vit_image.png" alt="isolated" width="400"/>
 <img src="./plots/vit_all_clusters.png" alt="isolated" width="400"/>
 

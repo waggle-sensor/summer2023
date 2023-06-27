@@ -4,6 +4,25 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 
 ## Week 06/26 -- 07/02
 
+### 06/27 Tue
+
+- Had another discussion with Dario and here are things to do:
+  - Use Silhouettes score to check clustering method score
+  - build clusters and check visually what the clustering is doing
+  - model evaluation and inference
+  - add pairs to tSNE plots and then evaluate a small batch of the files by eye
+  - add intermediate checkpoint for model training to understand the evolution of position of points in the clustering
+  - With Bhupendra: have another experiment with two PCA and cluster on RGB and IR individually. Then, comparing the results 
+  with another instance that has single PCA and clustering fitting on RGB+IR together. This comparison can be used to understand
+  the "closeness" of two models on inference
+- Calculated embeddings with `vitsmall_rgb16_ir8_bs128_ep150` model.
+- Clustering with `vit_rgb16_ir4_bs128_ep150`, result is shown below. The result is incredible as the separation between different 
+categories of images is very clear and the relationships between image pairs have been learned as well.
+- 
+<img src="./plots/vit_image.png" alt="isolated" width="400"/>
+<img src="./plots/vit_all_clusters.png" alt="isolated" width="400"/>
+!
+
 ### 06/26 Mon
 
 - Had a deep discussion with Dario and Bhupendra about the scope of the project and potential deliverables

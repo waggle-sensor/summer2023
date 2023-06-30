@@ -6,6 +6,8 @@ import sys
 import argparse
 import ast
 import time
+import numpy as np
+import math
 import requests
 from requests.auth import HTTPDigestAuth
 from bs4 import BeautifulSoup
@@ -78,6 +80,24 @@ class CameraControl:
 
         return resp
 
+    def operation_finished(self):
+        """
+        Operation to request PTZ status.
+
+        Returns:
+            Returns status and notifies when the operation is finished
+
+        """
+        resp = self._camera_command('ptzcontrol.cgi',
+                                    {'msubmenu': 'query', 'action': 'view', 'Query': 'Pan,Tilt,Zoom'})
+
+        pan = float(resp.text.split()[0].split('=')[1])
+        tilt = float(resp.text.split()[1].split('=')[1])
+        zoom = float(resp.text.split()[2].split('=')[1])
+        ptz_list = (pan, tilt, zoom)
+
+        return ptz_list
+
     def absolute_control(self, pan: float = None, tilt: float = None, zoom: int = None):
         """
         Operation to move pan, tilt or zoom to an absolute destination.
@@ -85,14 +105,113 @@ class CameraControl:
         Args:
             pan: pans the device relative to the (0,0) position.
             tilt: tilts the device relative to the (0,0) position.
-            zoom: zooms the device n steps relative to 0 zoom.
+            zoom: zooms the device n steps relative to 1 zoom.
 
         Returns:
             Returns the response from the device to the command sent.
 
         """
-        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'absolute', 'action': 'control',
-                                     'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+
+        init_pos = self.operation_finished()  # takes current position values as an array
+
+        self._camera_command('ptzcontrol.cgi', {'msubmenu': 'absolute', 'action': 'control',
+                             'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+
+        current_position = np.sum(init_pos)  # sums elements in the array
+
+        """
+        If either pan, tilt, or zoom were not chosen, set their final position to be equal to
+        their current position
+        
+        """
+        if pan is None:
+
+            pan = init_pos[0]
+
+        if tilt is None:
+
+            tilt = init_pos[1]
+
+        if zoom is None:
+
+            zoom = init_pos[2]
+
+        finished_position = round(pan+tilt+zoom, 2)
+
+        while abs(current_position - finished_position) > 0.05:
+
+            current_position = np.sum(self.operation_finished())
+
+    def relative_control(self, pan: float = None, tilt: float = None, zoom: int = None):
+        """
+        Operation for Relative Pan/Tilt and Zoom Move.
+
+        Args:
+            pan: pans the device n degrees relative to the current position.
+            tilt: tilts the device n degrees relative to the current position.
+            zoom: zooms the device n steps relative to the current position.
+
+        Returns:
+            Returns the response from the device to the command sent.
+
+        """
+
+        init_pos = self.operation_finished()  # takes current position values as an array
+
+        current_position = np.sum(init_pos)  # sums elements in the initial position array
+
+        current_pan = init_pos[0]  # provides the absolute pan position
+
+        current_tilt = init_pos[1]  # provides the absolute tilt position
+
+        current_zoom = init_pos[2]  # provides the absolute zoom position
+
+        if abs(360 - current_pan) < 0.5 or abs(current_pan) < 0.5:
+
+            # This if statement is necessary for when absolute pan is zero. When camera position is
+            # requested, the query returned was either approximately zero or 360. This statement
+            # sets out to fix that by forcing the current pan position to zero
+
+            current_pan = 0
+
+        # If either pan, tilt, or zoom were not chosen, set their relative movement to be equal to
+        # zero as nothing will be changed.
+
+        if pan is None:
+            pan = 0
+
+        if tilt is None:
+            tilt = 0
+
+        if zoom is None:
+            zoom = 0
+
+        # If the relative pan given causes the absolute pan position to surpass 360 degrees,
+        # set pan to go the other direction to reach the same location
+
+        if (current_pan + pan) > 360:
+            pan = pan - 360
+
+        # if the relative tilt given exceeds the 90 degree threshold, set the relative tilt to
+        # the difference that will result in the maximum 90 degree tilt
+
+        if 90 < (current_tilt + tilt):
+            tilt = 90 - current_tilt
+
+        # if the relative tilt given exceeds the 90 degree threshold, set the relative tilt to
+        # the difference that will result in the maximum 90 degree tilt
+
+        if (current_tilt + tilt) < -20:
+            tilt = -20 + abs(current_tilt)
+
+        self._camera_command('ptzcontrol.cgi', {'msubmenu': 'relative', 'action': 'control',
+                                                'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+
+        finished_position = pan + tilt + zoom + current_position
+
+        while abs(current_position - finished_position) > 0.5:
+            print(abs(current_position - finished_position))
+            current_position = np.sum(self.operation_finished())
 
     def continuous_control(self, pan: int = None, tilt: int = None, zoom: int = None):
         """
@@ -109,22 +228,6 @@ class CameraControl:
         """
 
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'continuous', 'action': 'control',
-                                     'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
-
-    def relative_control(self, pan: float = None, tilt: float = None, zoom: int = None):
-        """
-        Operation for Relative Pan/Tilt and Zoom Move.
-
-        Args:
-            pan: pans the device n degrees relative to the current position.
-            tilt: tilts the device n degrees relative to the current position.
-            zoom: zooms the device n steps relative to the current position.
-
-        Returns:
-            Returns the response from the device to the command sent.
-
-        """
-        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'relative', 'action': 'control',
                                      'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
 
     def stop_control(self):
@@ -156,9 +259,30 @@ class CameraControl:
             Returns the response from the device to the command sent
 
         """
-        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
-                                     'X1': x1, 'X2': x2, 'Y1': y1, 'Y2': y2, 'TileWidth': tilewidth,
-                                     'TileHeight': tileheight})
+
+        current_zoom = self.operation_finished()[2]
+
+        self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
+                             'X1': x1, 'X2': x2, 'Y1': y1, 'Y2': y2, 'TileWidth': tilewidth,
+                             'TileHeight': tileheight})
+
+        """
+        Checks to see if area zoom is finished
+
+        """
+        if tilewidth is None:
+            tilewidth = 10000
+
+        if tileheight is None:
+            tileheight = 10000
+
+        relative_zoom = tilewidth / abs(x1-x2)
+
+        final_zoom = current_zoom * relative_zoom
+
+        while abs(current_zoom - final_zoom) > 0.5:
+            current_zoom = self.operation_finished()[2]
+
 
     def movement_control(self, direction: str = None, movespeed: float = None):
         """
@@ -435,7 +559,7 @@ def main():
                         choices=range(-40, 41), action=CustomAction)
 
     parser.add_argument('-rp', '--relative_Pan', type=int, help='the numeric value of the "relative_Pan" action',
-                        choices=range(-180, 181), action=CustomAction)
+                        choices=range(-360, 361), action=CustomAction)
 
     parser.add_argument('-rt', '--relative_Tilt', type=int, help='the numeric value of the "relative_Tilt" action',
                         choices=range(-110, 111), action=CustomAction)
@@ -534,50 +658,41 @@ def main():
 
             if i == 'absolute_Zoom':
                 # If absolute_Zoom is True, execute command from CameraControl class body
-                terminal_control.absolute_control(zoom=ordered_args[k])
-                time.sleep(2)
+
+                # ptz_list = terminal_control.operation_finished()
+                #
+                # current_position = ptz_list[2]
+
+                terminal_control.absolute_control(zoom=ast.literal_eval(ordered_args[k]))
+                # print(ordered_args[k])
+                #
+                # finished_position = format(ast.literal_eval(ordered_args[k]), '.2f')
+                #
+                # while abs(float(current_position) - float(finished_position)) > 0.05:
+                #     ptz_list = terminal_control.operation_finished()
+                #     current_position = ptz_list[2]
+                #     print(current_position)
+                #     print(finished_position)
+
             if i == 'absolute_Pan':
-                terminal_control.absolute_control(pan=ordered_args[k])
-                time.sleep(2)
+                terminal_control.absolute_control(pan=ast.literal_eval(ordered_args[k]))
 
             if i == 'absolute_Tilt':
-                terminal_control.absolute_control(tilt=ordered_args[k])
-                time.sleep(2)
+                terminal_control.absolute_control(tilt=ast.literal_eval(ordered_args[k]))
 
             if i == 'relative_Zoom':
-                terminal_control.relative_control(zoom=ordered_args[k])
+                terminal_control.relative_control(zoom=ast.literal_eval(ordered_args[k]))
 
             if i == 'relative_Pan':
-                terminal_control.relative_control(pan=ordered_args[k])
+                terminal_control.relative_control(pan=ast.literal_eval(ordered_args[k]))
 
             if i == 'relative_Tilt':
-                terminal_control.relative_control(tilt=ordered_args[k])
+                terminal_control.relative_control(tilt=ast.literal_eval(ordered_args[k]))
 
             if i == 'continuous_control':
                 cc_param = ast.literal_eval(ordered_args[k])
 
-                Pan = None
-
-                Tilt = None
-
-                Zoom = None
-
-                j = 0
-
-                while j < len(cc_param):
-
-                    if j == 0:
-                        Pan = cc_param[j]
-
-                    if j == 1:
-                        Tilt = cc_param[j]
-
-                    if j == 2:
-                        Zoom = cc_param[j]
-
-                    j = j+1
-
-                terminal_control.continuous_control(pan=Pan, tilt=Tilt, zoom=Zoom)
+                terminal_control.continuous_control(pan=cc_param[0], tilt=cc_param[1], zoom=cc_param[2])
 
             if i == 'continuous_control_Zoom':
                 terminal_control.continuous_control(zoom=ordered_args[k])
@@ -621,29 +736,11 @@ def main():
 
                 TileHeight = None
 
-                j = 0
+                X1, X2, Y1, Y2 = zoom_param[:4]  # gives first zoom parameters
 
-                while j < len(zoom_param):
+                if len(zoom_param) > 4:
 
-                    if j == 0:
-                        X1 = zoom_param[j]
-
-                    if j == 1:
-                        X2 = zoom_param[j]
-
-                    if j == 2:
-                        Y1 = zoom_param[j]
-
-                    if j == 3:
-                        Y2 = zoom_param[j]
-
-                    if j == 4:
-                        TileHeight = zoom_param[j]
-
-                    if j == 5:
-                        TileWidth = zoom_param[j]
-
-                    j = j+1
+                    TileHeight, TileWidth = zoom_param[4:]
 
                 terminal_control.area_zoom(x1=X1, x2=X2, y1=Y1, y2=Y2, tilewidth=TileWidth, tileheight=TileHeight)
 

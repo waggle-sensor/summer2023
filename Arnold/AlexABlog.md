@@ -31,3 +31,15 @@ List of questions so far
 - How to pull image metadata? (trying to figure this out today, documentation on using images is lacking)
 - Updates on other data sources/other problems to solve
 - Target accuracy for the classifiers
+
+**June 25th 2023**
+Tried running the snow classifier with noise the model was unable to learn anything, but it could be due to my implementation? Standardized my results for both classiers without noise and scheduled a meeting for tomorrow.
+
+Figured out how to link the image tensors with the other data gathered from the node. Will be important (especially the date/time) when linking it with data collected with other sources
+
+**June 26th 2023**
+- Do we need to augment the image dataset to make it more generalizable, or does it not matter as much since it's only for images from this site?
+    Going to check how the model does on other nodes such as the one in Oregon in the mountains
+- Updates on other data sources/other problems to solve
+    None yet, but soon
+Wrote a script to divide the images into 16 sub-images and a quick way to sort them into having snow/not having snow. It's going to have to be done manually, but it should go pretty quickly. I might do a preliminary sort based on the brightness of the images calculated from HSV to speed things up. Taking some time to get more familiar with the OpenCV library to work with the images

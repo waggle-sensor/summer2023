@@ -476,3 +476,33 @@ Other:
 </details>
 
 
+
+<br/>
+
+
+
+<details>
+<summary> June 27, 2023 </summary>
+
+### June 27, 2023
+  
+  **Goal:** Train previous YoloV8 model with noise + darkened images dataset, start hyperparameter finetuning
+  
+ Completed preparing noise_dataset, trained model with newly updated data
+    
+  * Finished bounding boxes for noise_dataset, randomly divided images into training, validation, and testing folders
+  * Trained YoloV8 model with new data, using `best.pt` weights from most accurate model
+    * Evaluated model on testing data that did not contain noise images
+    * Precision `0.871` and recall `0.821` were higher than previous model (which was not trained with noise images) precision `0.837` and recall `0.805`
+    * Updated model had mAP @ 95% of 0.451
+  * Started researching methods on how to update model (using hyperparameter finetuning, and bayesian optimization)
+    * Trained model with a batch size of 32 and 64, but made no signficant difference on training accuracy
+  * Looked at YoloNAS Object Detection Foundational Model (which outperforms YoloV8) and is particularly uselfuly for smaller object detection
+    * Goal for tomorrow: create new YoloNAS model with data   
+   
+Other:
+  * GPU ran out for both accounts :( hoping to get ALCF GPU access soon!
+
+</details>
+
+

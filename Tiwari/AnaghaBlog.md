@@ -504,5 +504,56 @@ Other:
   * GPU ran out for both accounts :( hoping to get ALCF GPU access soon!
 
 </details>
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> June 28, 2023 </summary>
+
+### June 28, 2023
+  
+  **Goal:** Finetune YoloV8 hyperparameters, test other Yolo models
+  
+ Changed epochs & batchsize for YoloV8, starting creating new YoloNAS model
+    
+  * To increase mAP @ 95% (and recall/precision), changed batch size to 64 and 128 (for training and validation)
+    * Updated model precision and validation only increased by less than 0.05
+  * May have to train model for 100-200 epochs (after GPU allocated)
+  * Coded new Yolo-NAS M model using predefined/pretrained COCO weights, and finetuned on custom data, trained for 50 epochs
+    * Very high recall (but low precision)
+    * Recall@0.50 = `0.9688`, but Recall@0.50:0.95 = `0.5367`, which is much higher than YolOV8
+  * May have to run model for higher number of epochs with different batch sizes (or try Yolo_NAS L)
+   
+</details>
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> June 30, 2023 </summary>
+
+### June 30, 2023
+  
+  **Goal:** Train new Yolo_NAS L model
+  
+ Trained new Yolo_NAS L (instead of Yolo_NAS M) model on custom data
+    
+  * Larger Yolo_NAS version was finetuned on custom data and trained for 25 epochs (may have to train for 50 later on)
+    * Very low precision, but high recall (Recall@0.50 = `0.9922` and Map@0.50 = `0.9413`) for training stage
+  * Model was able to detect Uber/TNP stickers on cars that no previous models were able to identify (even for vehicles with 2/3 stickers)
+  * Yolo_NAS L had a much higher performance with less training (# of epochs) than both YoloV8 and YOLO_NAS M
+  * Goal for Monday: finetune hyperparameters for Yolo_NAS L latest model to increase precision and f1 score at higher confidence levels
+
+</details>
+
 
 

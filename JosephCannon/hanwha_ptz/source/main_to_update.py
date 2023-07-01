@@ -91,10 +91,19 @@ class CameraControl:
         resp = self._camera_command('ptzcontrol.cgi',
                                     {'msubmenu': 'query', 'action': 'view', 'Query': 'Pan,Tilt,Zoom'})
 
-        pan = float(resp.text.split()[0].split('=')[1])
-        tilt = float(resp.text.split()[1].split('=')[1])
-        zoom = float(resp.text.split()[2].split('=')[1])
-        ptz_list = (pan, tilt, zoom)
+        current_pan = float(resp.text.split()[0].split('=')[1])
+        current_tilt = float(resp.text.split()[1].split('=')[1])
+        current_zoom = float(resp.text.split()[2].split('=')[1])
+
+        if abs(360 - current_pan) < 0.5 or current_pan < 0.5:
+
+            # This if statement is necessary for when absolute pan is zero. When the camera position
+            # is requested, the query returned was either approximately zero or 360. This statement
+            # sets out to fix that bug by forcing the current pan position to be read as zero.
+
+            current_pan = 0
+
+        ptz_list = (current_pan, current_tilt, current_zoom)
 
         return ptz_list
 
@@ -166,15 +175,57 @@ class CameraControl:
 
         current_zoom = init_pos[2]  # provides the absolute zoom position
 
-        if abs(360 - current_pan) < 0.5 or abs(current_pan) < 0.5:
+        if pan is not None:
 
-            # This if statement is necessary for when absolute pan is zero. When camera position is
-            # requested, the query returned was either approximately zero or 360. This statement
-            # sets out to fix that by forcing the current pan position to zero
+            # If the relative pan given causes the absolute pan position to surpass 360 degrees,
+            # set pan to go the other direction to reach the same location
 
-            current_pan = 0
+            if (current_pan + pan) > 360:
+                pan = pan - 360
 
-        # If either pan, tilt, or zoom were not chosen, set their relative movement to be equal to
+            # If the relative pan given causes the absolute pan position to fall below 0 degrees,
+            # set pan to go the other direction to reach the same location
+
+            if (current_pan + pan) < 0:
+                pan = 360 - pan
+
+        if tilt is not None:
+
+            # if the relative tilt given exceeds the 90 degree threshold, set the relative tilt
+            # equal to the difference that will result in the maximum 90-degree tilt
+
+            if 90 < (current_tilt + tilt):
+                tilt = 90 - current_tilt
+
+            # if the relative tilt given exceeds the -20 degree threshold, set the relative tilt
+            # equal to the difference that will result in the minimum -20-degree tilt
+
+            if (current_tilt + tilt) < -20:
+                tilt = -20 + abs(current_tilt)
+
+        if zoom is not None:
+
+            # if the relative zoom given exceeds the 40 zoom threshold, set the relative zoom
+            # equal to the difference that will result in the maximum 40 zoom
+
+            if 40 < (current_zoom + zoom):
+                zoom = 40 - current_zoom
+
+            # if the relative zoom given exceeds the 1 degree threshold, set the relative zoom
+            # equal the difference that will result in the minimum -20-degree tilt
+
+            if (current_zoom + zoom) < 1:
+                zoom = 1 - current_zoom
+
+        if current_pan != 0:
+            self._camera_command('ptzcontrol.cgi', {'msubmenu': 'relative', 'action': 'control',
+                                                    'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+
+        if current_pan == 0:
+            self._camera_command('ptzcontrol.cgi', {'msubmenu': 'absolute', 'action': 'control',
+                                                    'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+
+        # If either pan, tilt, or zoom were not chosen, set their relative movement equal to
         # zero as nothing will be changed.
 
         if pan is None:
@@ -186,31 +237,9 @@ class CameraControl:
         if zoom is None:
             zoom = 0
 
-        # If the relative pan given causes the absolute pan position to surpass 360 degrees,
-        # set pan to go the other direction to reach the same location
-
-        if (current_pan + pan) > 360:
-            pan = pan - 360
-
-        # if the relative tilt given exceeds the 90 degree threshold, set the relative tilt to
-        # the difference that will result in the maximum 90 degree tilt
-
-        if 90 < (current_tilt + tilt):
-            tilt = 90 - current_tilt
-
-        # if the relative tilt given exceeds the 90 degree threshold, set the relative tilt to
-        # the difference that will result in the maximum 90 degree tilt
-
-        if (current_tilt + tilt) < -20:
-            tilt = -20 + abs(current_tilt)
-
-        self._camera_command('ptzcontrol.cgi', {'msubmenu': 'relative', 'action': 'control',
-                                                'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
-
         finished_position = pan + tilt + zoom + current_position
 
-        while abs(current_position - finished_position) > 0.5:
-            print(abs(current_position - finished_position))
+        while abs(current_position - finished_position) > 0.05:
             current_position = np.sum(self.operation_finished())
 
     def continuous_control(self, pan: int = None, tilt: int = None, zoom: int = None):

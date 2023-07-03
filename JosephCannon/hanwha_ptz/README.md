@@ -33,7 +33,7 @@ Example of use:
 from source import main_to_update
 
 
-Camera1 = main_to_update.CameraControl('<ip_address>', '<username>', '<password>')
+Camera1 = main_to_update.CameraControl('{**ip_address**}', '{**username**}', '{**password**}')
 
 Camera1.absolute_control(80, 30, 20)
 Camera1.relative_control(pan=80)
@@ -100,42 +100,42 @@ Here are some examples of how to use the Sunapi in terminal for the XNP-6400RW P
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress **Device IP** --username <username> --password <password> --absolute_Pan 20
+- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --absolute_Pan 20
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ap 20
+- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -ap 20
 
 ### Relative Tilt -30&deg; 
 
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --relative_Tilt -30
+- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --relative_Tilt -30
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -rt -30
+- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -rt -30
 
 ### Continuous control of Pan at a movement speed of 5
 
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --continuous_control_Pan 5
+- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --continuous_control_Pan 5
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ccp 5
+- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -ccp 5
 
 ### Pan to the absolute position of pan 20&deg;
 
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
+- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --absolute_Pan 20
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ap 20
+- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -ap 20
 
 ### Stop all action;
 
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --Stop
+- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --Stop
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -s
+- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -s

@@ -1,13 +1,99 @@
-# **HANWHA_API**
+# HANWHA_Sunapi
 
-Hello and welcome! Here are some examples of how to use this api for the XNP-6400RW PTZ camera:
+Hello and welcome! This library is designed to provide control and configuration of Hanwha cameras using the Sunapi protocol.
+
+**(Hanwha SDK)** SUNAPI support must be pre-authorized by Hanwha and is only available for Nx Witness VMS and select Powered-by-Nx products.
+
+**(Hanwha SDK)** provides functionality for taking images; controlling Pan, Tilt, & Zoom; retrieve and control internal settings, record and retrieve video to/from the SD card, and much more.
 
 ## **Required Python Libraries**
+- import logging
+- import sys
 - import argparse
+- import ast
+- import time
+- import numpy as np
+- import math
 - import requests
 - from requests.auth import HTTPDigestAuth
+- from bs4 import BeautifulSoup
 
-## **Terminal Command Examples**
+## Installation
+Install the package through pip:
+
+''''
+pip install 
+''''
+
+## Execution
+
+Example of use:
+
+''''
+from source import main_to_update
+
+
+Camera1 = main_to_update.CameraControl('<ip_address>', '<username>', '<password>')
+
+Camera1.absolute_control(80, 30, 20)
+Camera1.relative_control(pan=80)
+
+''''
+
+
+
+## Functions
+### Sunapi Control
+
+*	absolute_control(pan, tilt, zoom) - Operation to move Pan, Tilt, or Zoom to an absolute destination.
+	-	pan (float): pans the device relative to the (0,0) position. Values (0.0, ... 360.0)
+	-	tilt (float): tilts the device relative to the (0,0) position. Values(-20.0, ... 90.0)
+	-	zoom (float): zooms the device n steps. Values (1.0, ... 40.0)
+	
+*	relative_control(pan, tilt, zoom) - Operation to move Pan, Tilt, or Zoom to a destination relative to current position.
+	-	pan (float): pans the device relative to the current position. Values (-360.0, ... 360.0)
+	-	tilt (float): tilts the device relative to the current position. Values(-110.0, ... 110.0)
+	-	zoom (float): zooms the device n steps from current zoom position. Values (-40.0, ... 40.0)
+
+*	continuous_control(pan, tilt, zoom) - Operation for continuous Pan, Tilt, and Zoom movements.
+	-	pan (int): Speed of Pan movement. (0, ... 6)
+	-	tilt (int): Speed of Tilt movement. (0, ... 6)
+	-	zoom (int): Speed of Zoom movement (0, ... 6)
+	
+*	stop_control() - Operation to stop ongoing Pan, Tilt, and Zoom movements
+
+*	area_zoom(x1, x2, y1, y2, tilewidth, tileheight) - Operation zooms in on an area specified by boundaries x1 (int) and x2 (int), as well as y1 (int) to y2 (int). The default pixel dimensions are 10,000 by 10,000. Changes can be made by adjusting the tilewidth (int) and tileheight (int). Can only zoom in on an area at a minimum of 50 by 50 pixels in dimension.
+
+*	movement_control(direction, movespeed) - Continuously moves the device in the specified direction.
+	-	direction (str): Offered directions 'home', 'up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright'
+	-	movespeed (int): Speed of movement. (0, ... 6)
+	
+*	moving_to_home_position(channel) - Orient device to preset home position.
+	-	Channel (int): Select specified camera channel to send command.
+	
+*	requesting_cameras_position_information() - Operation requests and returns PTZ status information such as Pan, Tilt, Zoom, Zoom_Pulse, and Channel.
+
+*	moving_to_preset_position(presetname) - Orients camera to a preset position.
+	-	presetname (str): Provide the assigned name of the preset position
+	
+*	zoom_out() - Zooms out to 1x zoom
+
+*	aux_control(command) - Executes functions WiperOn, HeaterOn, and HeaterOff.
+	-	command (str): Choose from one of the specified functions.
+	
+*	attributes_information() - Opens a webbrowser and returns the url link of the atttributes information for the connected device.
+
+*	swing_control(channel) - Swings from one preset to another.
+	-	channel (int): Select channel to issue the swing command
+	
+*	applications() - Returns the installed applications information
+
+
+# From Terminal
+
+Here are some examples of how to use the Sunapi in terminal for the XNP-6400RW PTZ camera:
+
+## Terminal Command Examples
 
 ### Pan to the absolute position of pan 20&deg;
 

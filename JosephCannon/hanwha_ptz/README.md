@@ -30,10 +30,10 @@ pip install
 Example of use:
 
 ````
-from source import main_to_update
+from source import sunapi_control
 
 
-Camera1 = main_to_update.CameraControl('{**ip_address**}', '{**username**}', '{**password**}')
+Camera1 = sunapi_control.CameraControl('{**ip_address**}', '{**username**}', '{**password**}')
 
 Camera1.absolute_control(80, 30, 20)
 Camera1.relative_control(pan=80)

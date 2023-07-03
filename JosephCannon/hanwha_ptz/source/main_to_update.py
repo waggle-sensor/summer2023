@@ -55,22 +55,11 @@ class CameraControl:
             Returns the response from the device to the command sent
 
         """
-        logging.info('camera_command(%s)', payload)
-
-        base_q_args = {
-            'camera': 1,
-            'html': 'no',
-            'timestamp': int(time.time())
-        }
-
-        payload2 = CameraControl.__merge_dicts(payload, base_q_args)
 
         url = 'http://' + self.__cam_ip + '/stw-cgi/' + value_cgi
 
         resp = requests.get(url, auth=HTTPDigestAuth(self.__cam_user, self.__cam_password),
                             params=payload)
-
-        print(resp.url)
 
         if (resp.status_code != 200) and (resp.status_code != 204):
             soup = BeautifulSoup(resp.text, features="lxml")
@@ -145,9 +134,16 @@ class CameraControl:
 
             zoom = init_pos[2]
 
-        finished_position = round(pan+tilt+zoom, 2)
+        # Since operation finished will set pan equal to zero if it is approximately close,
+        # pan must be equal to zero here as well as the finished_position will be zero
 
-        while abs(current_position - finished_position) > 0.05:
+        if abs(pan-360) < 0.05:
+
+            pan = 0
+
+        finished_position = pan+tilt+zoom
+
+        while abs(current_position - finished_position) > 0.5:
 
             current_position = np.sum(self.operation_finished())
 
@@ -237,9 +233,12 @@ class CameraControl:
         if zoom is None:
             zoom = 0
 
+        # The finished_position will be set to the current_position plus whatever relative changes
+        # will be made.
+
         finished_position = pan + tilt + zoom + current_position
 
-        while abs(current_position - finished_position) > 0.05:
+        while abs(current_position - finished_position) > 0.5:
             current_position = np.sum(self.operation_finished())
 
     def continuous_control(self, pan: int = None, tilt: int = None, zoom: int = None):
@@ -315,11 +314,11 @@ class CameraControl:
 
     def movement_control(self, direction: str = None, movespeed: float = None):
         """
-        Moves the device 5 degrees in the specified direction.
+        Moves the device continuously in the specified direction.
 
         Args:
-            position: position to move. (home, up, down, left, right, upleft, upright, downleft...)
-            speed: speed move camera.
+            direction: direction to move. (home, up, down, left, right, upleft, upright, downleft...)
+            movespeed: speed to move camera.
 
         Returns:
             Returns the response from the device to the command sent
@@ -417,7 +416,7 @@ class CameraControl:
               Move from one preset to another
 
               Args:
-                  command = choice between WiperOn, HeaterOn, HeaterOff
+                  command = choose channel
 
               Returns:
                   Returns the response from the device to the command sent
@@ -440,6 +439,10 @@ class CameraControl:
         print(resp.text)
 
         return resp
+
+
+
+
 
 
 

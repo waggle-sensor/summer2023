@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup
 logging.basicConfig(filename='sunapi.log', filemode='w', level=logging.DEBUG)
 logging.info('Started')
 
+
 # pylint: disable=R0904
 
 
@@ -27,23 +28,6 @@ class CameraControl:
         self.__cam_ip = ip
         self.__cam_user = user
         self.__cam_password = password
-
-    @staticmethod
-    def __merge_dicts(*dict_args) -> dict:
-        """
-        Given any number of dicts, shallow copy and merge into a new dict,
-        precedence goes to key value pairs in latter dicts
-
-        Args:
-            *dict_args: argument dictionary
-
-        Returns:
-            Return a merged dictionary
-        """
-        result = {}
-        for dictionary in dict_args:
-            result.update(dictionary)
-        return result
 
     def _camera_command(self, value_cgi, payload: dict):
         """
@@ -60,6 +44,8 @@ class CameraControl:
 
         resp = requests.get(url, auth=HTTPDigestAuth(self.__cam_user, self.__cam_password),
                             params=payload)
+
+        print(resp.url)
 
         if (resp.status_code != 200) and (resp.status_code != 204):
             soup = BeautifulSoup(resp.text, features="lxml")
@@ -85,7 +71,6 @@ class CameraControl:
         current_zoom = float(resp.text.split()[2].split('=')[1])
 
         if abs(360 - current_pan) < 0.5 or current_pan < 0.5:
-
             # This if statement is necessary for when absolute pan is zero. When the camera position
             # is requested, the query returned was either approximately zero or 360. This statement
             # sets out to fix that bug by forcing the current pan position to be read as zero.
@@ -96,7 +81,8 @@ class CameraControl:
 
         return ptz_list
 
-    def absolute_control(self, pan: float = None, tilt: float = None, zoom: int = None):
+    def absolute_control(self, pan: float = None, tilt: float = None, zoom: float = None, zoom_pulse: int = None,
+                         channel: int = None):
         """
         Operation to move pan, tilt or zoom to an absolute destination.
 
@@ -113,7 +99,8 @@ class CameraControl:
         init_pos = self.operation_finished()  # takes current position values as an array
 
         self._camera_command('ptzcontrol.cgi', {'msubmenu': 'absolute', 'action': 'control',
-                             'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+                                                'Pan': pan, 'Tilt': tilt, 'Zoom': zoom,
+                                                'ZoomPulse': zoom_pulse, 'Channel': channel})
 
         current_position = np.sum(init_pos)  # sums elements in the array
 
@@ -123,31 +110,27 @@ class CameraControl:
         
         """
         if pan is None:
-
             pan = init_pos[0]
 
         if tilt is None:
-
             tilt = init_pos[1]
 
         if zoom is None:
-
             zoom = init_pos[2]
 
         # Since operation finished will set pan equal to zero if it is approximately close,
         # pan must be equal to zero here as well as the finished_position will be zero
 
-        if abs(pan-360) < 0.05:
-
+        if abs(pan - 360) < 0.05:
             pan = 0
 
-        finished_position = pan+tilt+zoom
+        finished_position = pan + tilt + zoom
 
         while abs(current_position - finished_position) > 0.5:
-
             current_position = np.sum(self.operation_finished())
 
-    def relative_control(self, pan: float = None, tilt: float = None, zoom: int = None):
+    def relative_control(self, pan: float = None, tilt: float = None, zoom: int = None, zoom_pulse: int = None,
+                         channel: int = None):
         """
         Operation for Relative Pan/Tilt and Zoom Move.
 
@@ -215,11 +198,13 @@ class CameraControl:
 
         if current_pan != 0:
             self._camera_command('ptzcontrol.cgi', {'msubmenu': 'relative', 'action': 'control',
-                                                    'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+                                                    'Pan': pan, 'Tilt': tilt, 'Zoom': zoom,
+                                                    'ZoomPulse': zoom_pulse, 'Channel': channel})
 
         if current_pan == 0:
             self._camera_command('ptzcontrol.cgi', {'msubmenu': 'absolute', 'action': 'control',
-                                                    'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+                                                    'Pan': pan, 'Tilt': tilt, 'Zoom': zoom,
+                                                    'ZoomPulse': zoom_pulse, 'Channel': channel})
 
         # If either pan, tilt, or zoom were not chosen, set their relative movement equal to
         # zero as nothing will be changed.
@@ -241,22 +226,28 @@ class CameraControl:
         while abs(current_position - finished_position) > 0.5:
             current_position = np.sum(self.operation_finished())
 
-    def continuous_control(self, pan: int = None, tilt: int = None, zoom: int = None):
+    def continuous_control(self, normalized_speed: bool = None, pan: int = None, tilt: int = None, zoom: int = None, focus: str = None):
         """
         Operation for continuous Pan/Tilt and Zoom movements.
 
         Args:
+            normalized_speed: enables or disables the normalized speed range for pan, tilt, zoom.
             pan: speed of movement of Pan.
             tilt: speed of movement of Tilt.
             zoom: speed of movement of Zoom.
+            focus: focus control. This parameter cannot be sent together with pan, tilt, or zoom.
 
         Returns:
             Returns the response from the device to the command sent.
 
         """
 
+        if focus not in ("Near", "Far", "Stop", None):
+            raise Exception("Unauthorized command: Please enter a string from the choices: 'Near', 'Far', or 'Stop'")
+
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'continuous', 'action': 'control',
-                                     'Pan': pan, 'Tilt': tilt, 'Zoom': zoom})
+                                                       'NormalizedSpeed': normalized_speed, 'Pan': pan,
+                                                       'Tilt': tilt, 'Zoom': zoom, 'Focus': focus})
 
     def stop_control(self):
         """
@@ -268,7 +259,7 @@ class CameraControl:
 
         """
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'stop', 'action': 'control',
-                                     'OperationType': 'All'})
+                                                       'OperationType': 'All'})
 
     def area_zoom(self, x1: int = None, x2: int = None, y1: int = None,
                   y2: int = None, tilewidth: int = None, tileheight: int = None):
@@ -291,8 +282,8 @@ class CameraControl:
         current_zoom = self.operation_finished()[2]
 
         self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
-                             'X1': x1, 'X2': x2, 'Y1': y1, 'Y2': y2, 'TileWidth': tilewidth,
-                             'TileHeight': tileheight})
+                                                'X1': x1, 'X2': x2, 'Y1': y1, 'Y2': y2, 'TileWidth': tilewidth,
+                                                'TileHeight': tileheight})
 
         """
         Checks to see if area zoom is finished
@@ -304,13 +295,16 @@ class CameraControl:
         if tileheight is None:
             tileheight = 10000
 
-        relative_zoom = tilewidth / abs(x1-x2)
+        print(tileheight)
+        relative_zoom = tileheight / abs(y1 - y2)
 
         final_zoom = current_zoom * relative_zoom
+        print(current_zoom)
+        print(final_zoom)
 
         while abs(current_zoom - final_zoom) > 0.5:
             current_zoom = self.operation_finished()[2]
-
+            print(current_zoom)
 
     def movement_control(self, direction: str = None, movespeed: float = None):
         """
@@ -326,7 +320,7 @@ class CameraControl:
         """
 
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'move', 'action': 'control',
-                                     'Direction': direction, 'MoveSpeed': movespeed})
+                                                       'Direction': direction, 'MoveSpeed': movespeed})
 
     def moving_to_home_position(self, channel: int = None):
         """
@@ -340,7 +334,7 @@ class CameraControl:
 
         """
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'home', 'action': 'control',
-                                     'Channel': channel})
+                                                       'Channel': channel})
 
     def requesting_cameras_position_information(self):
         """
@@ -360,7 +354,7 @@ class CameraControl:
         print(ptz_list)
         return ptz_list
 
-    def moving_to_preset_position(self, presetname: str = None):
+    def moving_to_preset_position(self, preset: int = None, presetname: str = None):
         """
         Move to the position associated with the preset on server.
 
@@ -372,7 +366,7 @@ class CameraControl:
 
         """
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'preset', 'action': 'control',
-                                     'PresetName': presetname})
+                                                       'Preset': preset, 'PresetName': presetname})
 
     def zoom_out(self):
         """
@@ -383,7 +377,7 @@ class CameraControl:
 
         """
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
-                                     'Type': '1x'})
+                                                       'Type': '1x'})
 
     def aux_control(self, command: str = None):
         """
@@ -398,7 +392,7 @@ class CameraControl:
            """
 
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'aux', 'action': 'control',
-                                     'Command': command})
+                                                       'Command': command})
 
     def attributes_information(self):
         """
@@ -409,9 +403,11 @@ class CameraControl:
 
            """
 
-        return self._camera_command('attributes.cgi', {})
+        attributes = self._camera_command('attributes.cgi', {})
 
-    def swing_control(self, channel: int = None):
+        print(attributes.url)
+
+    def swing_control(self, channel: int = None, mode: str = None):
         """
               Move from one preset to another
 
@@ -423,8 +419,11 @@ class CameraControl:
 
               """
 
+        if mode not in ("Pan", "Tilt", "PanTilt", "Stop", None):
+            raise Exception("Unauthorized command: Please enter a string from the choices: 'Pan', 'Tilt', 'PanTilt', 'Stop'")
+
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'swing', 'action': 'control',
-                                                       'Channel': channel, 'Mode': 'PanTilt'})
+                                                       'Channel': channel, 'Mode': mode})
 
     def applications(self):
         """
@@ -440,124 +439,7 @@ class CameraControl:
 
         return resp
 
-
-
-
-
-
-
-    def go_to_server_preset_no(self, number: int = None, speed: int = None):
-        """
-        Move to the position associated with the specified preset position number.
-
-        Args:
-            number: number of preset position server.
-            speed: speed move camera.
-
-        Returns:
-            Returns the response from the device to the command sent
-
-        """
-        return self._camera_command({'gotoserverpresetno': number, 'speed': speed})
-
-    def go_to_device_preset(self, preset_pos: int = None, speed: int = None):
-        """
-        Bypasses the presetpos interface and tells the device to go directly to the preset
-        position number stored in the device, where the is a device-specific preset position number.
-
-        Args:
-            preset_pos: number of preset position device
-            speed: speed move camera
-
-        Returns:
-            Returns the response from the device to the command sent
-
-        """
-        return self._camera_command({'gotodevicepreset': preset_pos, 'speed': speed})
-
-    def list_preset_device(self):
-        """
-        List the presets positions stored in the device.
-
-        Returns:
-            Returns the list of presets positions stored on the device.
-
-        """
-        return self._camera_command({'query': 'presetposcam'})
-
-    def list_all_preset(self):
-        """
-        List all available presets position.
-
-        Returns:
-            Returns the list of all presets positions.
-
-        """
-        resp = self._camera_command({'query': 'presetposall'})
-        soup = BeautifulSoup(resp.text, features="lxml")
-        resp_presets = soup.text.split('\n')
-        presets = []
-
-        for i in range(1, len(resp_presets)-1):
-            preset = resp_presets[i].split("=")
-            presets.append((int(preset[0].split('presetposno')[1]), preset[1].rstrip('\r')))
-
-        return presets
-
-    def set_speed(self, speed: int = None):
-        """
-        Sets the head speed of the device that is connected to the specified camera.
-        Args:
-            speed: speed value.
-
-        Returns:
-            Returns the response from the device to the command sent.
-
-        """
-        return self._camera_command({'speed': speed})
-
-    def get_speed(self):
-        """
-        Requests the camera's speed of movement.
-
-        Returns:
-            Returns the camera's move value.
-
-        """
-        resp = self._camera_command({'query': 'speed'})
-        return int(resp.text.split()[0].split('=')[1])
-
-    def info_ptz_commands(self):
-        """
-        Returns a description of available PTZ commands. No PTZ control is performed.
-
-        Returns:
-            Success (OK and system log content text) or Failure (error and description).
-
-        """
-        resp = self._camera_command({'info': '1'})
-        return resp.text
-
-    def center_move(self, pos_x: int = None, pos_y: int = None, speed: int = None):
-        """
-        Used to send the coordinates for the point in the image where the user clicked. This
-        information is then used by the server to calculate the pan/tilt move required to
-        (approximately) center the clicked point.
-
-        Args:
-            pos_x: value of the X coordinate.
-            pos_y: value of the Y coordinate.
-            speed: speed move camera.
-
-        Returns:
-            Returns the response from the device to the command sent
-
-        """
-        pan_tilt = str(pos_x) + "," + str(pos_y)
-        return self._camera_command({'center': pan_tilt, 'speed': speed})
-
 def main():
-
     class CustomAction(argparse.Action):
         '''
         In this CustomAction class, an array will be made with action destinations being placed in 0 up through
@@ -596,20 +478,25 @@ def main():
     parser.add_argument('-rt', '--relative_Tilt', type=int, help='the numeric value of the "relative_Tilt" action',
                         choices=range(-110, 111), action=CustomAction)
 
-    parser.add_argument('-cc', '--continuous_control', type=int, help='to execute and specify "continuous_control" action',
-                        nargs='+', choices=range(-6, 7), action=CustomAction)
+    parser.add_argument('-cc', '--continuous_control',
+                        help='to execute and specify "continuous_control" action',
+                        nargs='+', action=CustomAction)
 
-    parser.add_argument('-ccz', '--continuous_control_Zoom', type=int,
+    parser.add_argument('-ccz', '--continuous_control_Zoom',
                         help='the numeric value of the "continuous_control_Zoom" action',
-                        choices=range(-5, 6), action=CustomAction)
+                        nargs='+', action=CustomAction)
 
-    parser.add_argument('-ccp', '--continuous_control_Pan', type=int,
+    parser.add_argument('-ccp', '--continuous_control_Pan',
                         help='the numeric value of the "continuous_control_Pan" action',
-                        choices=range(-6, 7), action=CustomAction)
+                        nargs='+', action=CustomAction)
 
-    parser.add_argument('-cct', '--continuous_control_Tilt', type=int,
+    parser.add_argument('-cct', '--continuous_control_Tilt',
                         help='the numeric value of the "continuous_control_Tilt" action',
-                        choices=range(-6, 7), action=CustomAction)
+                        nargs='+', action=CustomAction)
+
+    parser.add_argument('-ccf', '--continuous_control_Focus',
+                        help='the enumerated value of the "continuous_control_Focus" action',
+                        action=CustomAction)
 
     parser.add_argument('-l', '--Left', type=int, help='the numeric value of the "movement_Left" action',
                         choices=range(0, 7), action=CustomAction)
@@ -664,19 +551,19 @@ def main():
 
     terminal_control = CameraControl(args.ipAddress, args.username, args.password)  # calling the Class CameraControl
 
-    if args.Stop: # If Stop is True, execute command from CameraControl class body
+    if args.Stop:  # If Stop is True, execute command from CameraControl class body
         terminal_control.stop_control()
 
-    if args.WiperOn: # If WiperOn is True, execute command from CameraControl class body
+    if args.WiperOn:  # If WiperOn is True, execute command from CameraControl class body
         terminal_control.aux_control(command='WiperOn')
 
-    if args.HeaterOn: # If HeaterOn is True, execute command from CameraControl class body
+    if args.HeaterOn:  # If HeaterOn is True, execute command from CameraControl class body
         terminal_control.aux_control(command='HeaterOn')
 
-    if args.HeaterOff: # If HeaterOff is True, execute command from CameraControl class body
+    if args.HeaterOff:  # If HeaterOff is True, execute command from CameraControl class body
         terminal_control.aux_control(command='HeaterOff')
 
-    if args.requesting_cameras_position_information: # If requesting_cameras_position_information is True, execute command from CameraControl class body
+    if args.requesting_cameras_position_information:  # If requesting_cameras_position_information is True, execute command from CameraControl class body
         terminal_control.requesting_cameras_position_information()
 
     if args.zoom_out:  # If zoom_out is True, execute command from CameraControl class body
@@ -689,22 +576,7 @@ def main():
         for i in ordered_args[::2]:  # starts from first position and iterates by two to get next destination
 
             if i == 'absolute_Zoom':
-                # If absolute_Zoom is True, execute command from CameraControl class body
-
-                # ptz_list = terminal_control.operation_finished()
-                #
-                # current_position = ptz_list[2]
-
                 terminal_control.absolute_control(zoom=ast.literal_eval(ordered_args[k]))
-                # print(ordered_args[k])
-                #
-                # finished_position = format(ast.literal_eval(ordered_args[k]), '.2f')
-                #
-                # while abs(float(current_position) - float(finished_position)) > 0.05:
-                #     ptz_list = terminal_control.operation_finished()
-                #     current_position = ptz_list[2]
-                #     print(current_position)
-                #     print(finished_position)
 
             if i == 'absolute_Pan':
                 terminal_control.absolute_control(pan=ast.literal_eval(ordered_args[k]))
@@ -724,18 +596,64 @@ def main():
             if i == 'continuous_control':
                 cc_param = ast.literal_eval(ordered_args[k])
 
-                terminal_control.continuous_control(pan=cc_param[0], tilt=cc_param[1], zoom=cc_param[2])
+                normalized_speed = None
+
+                pan = None
+
+                tilt = None
+
+                zoom = None
+
+                j = 0
+
+                while j < len(cc_param):
+
+                    if j == 0:
+                        normalized_speed = cc_param[j]
+
+                    if j == 1:
+                        pan = cc_param[j]
+
+                    if j == 2:
+                        tilt = cc_param[j]
+
+                    if j == 3:
+                        zoom = cc_param[j]
+
+                    j = j + 1
+
+                terminal_control.continuous_control(normalized_speed=normalized_speed, pan=pan,
+                                                    tilt=tilt, zoom=zoom)
 
             if i == 'continuous_control_Zoom':
-                terminal_control.continuous_control(zoom=ordered_args[k])
+
+                ccz_param = ast.literal_eval(ordered_args[k])
+
+                normalized_speed, zoom = ccz_param[:2]  # gives first zoom parameters
+
+                terminal_control.continuous_control(normalized_speed=normalized_speed,
+                                                    zoom=zoom)
 
             if i == 'continuous_control_Pan':
-                terminal_control.continuous_control(pan=ordered_args[k])
-                time.sleep(3)
+
+                ccp_param = ast.literal_eval(ordered_args[k])
+
+                normalized_speed, pan = ccp_param[:2]  # gives first zoom parameters
+
+                terminal_control.continuous_control(normalized_speed=normalized_speed,
+                                                    pan=pan)
 
             if i == 'continuous_control_Tilt':
-                terminal_control.continuous_control(tilt=ordered_args[k])
-                time.sleep(3)
+
+                cct_param = ast.literal_eval(ordered_args[k])
+
+                normalized_speed, tilt = cct_param[:2]  # gives first zoom parameters
+
+                terminal_control.continuous_control(normalized_speed=normalized_speed,
+                                                    tilt=tilt)
+
+            if i == 'continuous_control_Focus':
+                terminal_control.continuous_control(focus=ordered_args[k])
 
             if i == 'Left':
                 terminal_control.movement_control(direction='Left', movespeed=ordered_args[k])
@@ -771,12 +689,12 @@ def main():
                 X1, X2, Y1, Y2 = zoom_param[:4]  # gives first zoom parameters
 
                 if len(zoom_param) > 4:
-
-                    TileHeight, TileWidth = zoom_param[4:]
+                    TileWidth, TileHeight = zoom_param[4:]
 
                 terminal_control.area_zoom(x1=X1, x2=X2, y1=Y1, y2=Y2, tilewidth=TileWidth, tileheight=TileHeight)
 
             k = k + 2
+
 
 if __name__ == '__main__':
     main()

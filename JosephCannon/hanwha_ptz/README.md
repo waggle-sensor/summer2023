@@ -55,14 +55,16 @@ Camera1.relative_control(pan=80)
 	-	tilt (float): tilts the device relative to the current position. Values(-110.0, ... 110.0)
 	-	zoom (float): zooms the device n steps from current zoom position. Values (-40.0, ... 40.0)
 
-*	`continuous_control(pan, tilt, zoom)` - Operation for continuous Pan, Tilt, and Zoom movements.
+*	`continuous_control(normalized_speed, pan, tilt, zoom)` - Operation for continuous Pan, Tilt, and Zoom movements.
+	-	normalized_speed (bool): Enables or disables the normalized speed range for Pan, Tilt, and Zoom. If normalized_speed is not sent, or set as False, the Pan, Tilt, and Zoom speed
+range will be device dependent values; If normalized_speed is set as True, the speed values for Pan, Tilt, and Zoom will be in the range of -100 to 100. normalized_speed must be sent together with Pan, Tilt, or Zoom.
 	-	pan (int): Speed of Pan movement. (0, ... 6)
 	-	tilt (int): Speed of Tilt movement. (0, ... 6)
 	-	zoom (int): Speed of Zoom movement (0, ... 6)
 	
 *	`stop_control()` - Operation to stop ongoing Pan, Tilt, and Zoom movements
 
-*	`area_zoom(x1, x2, y1, y2, tilewidth, tileheight)` - Operation zooms in on an area specified by boundaries x1 (int) and x2 (int), as well as y1 (int) to y2 (int). The default pixel dimensions are 10,000 by 10,000. Changes can be made by adjusting the tilewidth (int) and tileheight (int). Can only zoom in on an area at a minimum of 50 by 50 pixels in dimension.
+*	`area_zoom(x1, x2, y1, y2, tilewidth, tileheight)` - Operation zooms in on an area specified by boundaries x1 (int) and x2 (int), as well as y1 (int) to y2 (int). The default pixel dimensions are 10,000 by 10,000. The upper-left corner of the image is the (0, 0) position and the bottom-right corner of the image is the (10,000, 10,000) position. Changes can be made by adjusting the tilewidth (int) and tileheight (int). Can only zoom in on an area at a minimum of 50 by 50 pixels in dimension.
 
 *	`movement_control(direction, movespeed)` - Continuously moves the device in the specified direction.
 	-	direction (str): Offered directions 'home', 'up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright'

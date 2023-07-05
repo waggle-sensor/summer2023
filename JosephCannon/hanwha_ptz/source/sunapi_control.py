@@ -40,6 +40,8 @@ class CameraControl:
 
         """
 
+        logging.info('camera_command(%s)', payload)
+
         url = 'http://' + self.__cam_ip + '/stw-cgi/' + value_cgi
 
         resp = requests.get(url, auth=HTTPDigestAuth(self.__cam_user, self.__cam_password),
@@ -359,7 +361,9 @@ class CameraControl:
         Move to the position associated with the preset on server.
 
         Args:
+            preset: numbered position of preset
             presetname: name of preset position server.
+            * cannot be sent together
 
         Returns:
             Returns the response from the device to the command sent
@@ -412,7 +416,8 @@ class CameraControl:
               Move from one preset to another
 
               Args:
-                  command = choose channel
+                  channel = choose channel
+                  mode = select mode of either: "Pan", "Tilt", "PanTilt", "Stop"
 
               Returns:
                   Returns the response from the device to the command sent
@@ -424,6 +429,70 @@ class CameraControl:
 
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'swing', 'action': 'control',
                                                        'Channel': channel, 'Mode': mode})
+
+    def group_control(self, channel: int = None, group: int = None, mode: str = None):
+        """
+              Starts and stops a Group operation in which various presets are grouped and called
+              in sequence.
+
+              Args:
+                  channel = choose channel
+                  group = select a group sequence set in channel
+                  mode = choose a mode of either "Start" or "Stop"
+
+              Returns:
+                  Returns the response from the device to the command sent
+
+              """
+
+        if mode not in ("Start", "Stop", None):
+            raise Exception("Unauthorized command: Please enter a string from the choices: 'Start' or 'Stop'")
+
+        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'group', 'action': 'control',
+                                                       'Channel': channel, 'Group': group,
+                                                       'Mode': mode})
+
+    def tour_control(self, channel: int = None, tour: int = None, mode: str = None):
+        """
+              Starts and stops a Tour operation, calling groups of presets in sequence.
+
+              Args:
+                  channel = choose channel
+                  tour = select a tour sequence set in channel
+                  mode = choose a mode of either "Start" or "Stop"
+
+              Returns:
+                  Returns the response from the device to the command sent
+
+              """
+
+        if mode not in ("Start", "Stop", None):
+            raise Exception("Unauthorized command: Please enter a string from the choices: 'Start' or 'Stop'")
+
+        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'tour', 'action': 'control',
+                                                       'Channel': channel, 'Tour': tour,
+                                                       'Mode': mode})
+
+    def trace_control(self, channel: int = None, trace: int = None, mode: str = None):
+        """
+              Starts and stops a Trace operation
+
+              Args:
+                  channel = choose channel
+                  trace = select a trace action that has been set in channel
+                  mode = choose a mode of either "Start" or "Stop"
+
+              Returns:
+                  Returns the response from the device to the command sent
+
+              """
+
+        if mode not in ("Start", "Stop", None):
+            raise Exception("Unauthorized command: Please enter a string from the choices: 'Start' or 'Stop'")
+
+        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'trace', 'action': 'control',
+                                                       'Channel': channel, 'Trace': trace,
+                                                       'Mode': mode})
 
     def applications(self):
         """
@@ -524,6 +593,18 @@ def main():
 
     parser.add_argument('-arz', '--area_Zoom', type=int, help='to execute and specify "area_zoom" action',
                         nargs='+', action=CustomAction)
+
+    parser.add_argument('-sc', '--swing_control', help='to execute a swing action',
+                        nargs=2, action=CustomAction)
+
+    parser.add_argument('-gc', '--group_control', help='to execute a group action',
+                        nargs=3, action=CustomAction)
+
+    parser.add_argument('-tc', '--tour_control', help='to execute a tour action',
+                        nargs=3, action=CustomAction)
+
+    parser.add_argument('-trace', '--trace_control', help='to execute a trace action',
+                        nargs=3, action=CustomAction)
 
     parser.add_argument('-s', '--Stop', action='store_true',
                         help='to execute the "stop_control" action')
@@ -688,10 +769,38 @@ def main():
 
                 X1, X2, Y1, Y2 = zoom_param[:4]  # gives first zoom parameters
 
-                if len(zoom_param) > 4:
+                if len(zoom_param) > 4:  # if TileWidth and TileHeight are changed
                     TileWidth, TileHeight = zoom_param[4:]
 
                 terminal_control.area_zoom(x1=X1, x2=X2, y1=Y1, y2=Y2, tilewidth=TileWidth, tileheight=TileHeight)
+
+            if i == 'swing_control':
+                swing_param = ast.literal_eval(ordered_args[k])
+
+                channel, mode = swing_param[:2]
+
+                terminal_control.swing_control(channel=channel, mode=mode)
+
+            if i == 'group_control':
+                swing_param = ast.literal_eval(ordered_args[k])
+
+                channel, group, mode = swing_param[:3]
+
+                terminal_control.group_control(channel=channel, group=group, mode=mode)
+
+            if i == 'tour_control':
+                swing_param = ast.literal_eval(ordered_args[k])
+
+                channel, tour, mode = swing_param[:3]
+
+                terminal_control.tour_control(channel=channel, tour=tour, mode=mode)
+
+            if i == 'trace_control':
+                swing_param = ast.literal_eval(ordered_args[k])
+
+                channel, trace, mode = swing_param[:3]
+
+                terminal_control.trace_control(channel=channel, trace=trace, mode=mode)
 
             k = k + 2
 

@@ -557,3 +557,45 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> July 3, 2023 </summary>
+
+### July 3, 2023
+  
+  **Goal:** Started on Sage NSF Video
+  
+ Started working on introduction clips for Sage NSF Video
+    
+  * Used Adobe Premiero Pro to edit and download Argonne video clips and create introduction video
+  * Will record intern spotlights and staff panel by next week.
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 5, 2023 </summary>
+
+### July 5, 2023
+  
+  **Goal:** Trained Yolo-NAS L model with noise dataset
+  
+ Used previous Yolo_NAS_L model weights and finetuned with noise dataset
+    
+  * Used previous Yolo_NAS_L model weights (customed trained with rideshare vehicle dataset)
+  * Trained for 25 epochs with noise dataset from Chicago nodes (and augmented darkened rideshare stickers)
+  * F1 score a bit lower than previous Yolo_NAS_L model (trained with clear images), but will test on clear images and expect a higher overall accuracy
+  * Problems with CPU/GPU weights (may have to convert images using torch transformations before using them for evaluation)
+
+</details>
+
+
+

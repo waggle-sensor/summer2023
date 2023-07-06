@@ -43,3 +43,12 @@ Figured out how to link the image tensors with the other data gathered from the 
 - Updates on other data sources/other problems to solve
     None yet, but soon
 Wrote a script to divide the images into 16 sub-images and a quick way to sort them into having snow/not having snow. It's going to have to be done manually, but it should go pretty quickly. I might do a preliminary sort based on the brightness of the images calculated from HSV to speed things up. Taking some time to get more familiar with the OpenCV library to work with the images
+
+**July 3rd 2023**
+Spent the past few days creating the new dataset from patches of the original one which took  awhile since it was mostly manual. Certainly some mistakes in there but hoping that it won't matter too much. There's a lot more data so it takes a lot longer to train given the limited memory I have, but it does train. 
+
+**July 5th 2023**
+Downloaded images from W084. Ran into some problems finding a good node to pull from that a good mix of snow/no snow pictures but eventually settled on the the top camera. The bottom one included the mountain which had snow a lot more often and may not have been as good for intial tests of generalizability. If this set goes well I can try it, but I expect it would be a better use of time to start working on learning and creating a docker application.
+
+**July 6th 2023**
+The model performs with about 80% accuracy on the data from Idaho which is a good sign especially since it's a very different image than the nodes on the bad river. Also trying to learn how to create an application for the node now (hopefully to be deployed on the bad river node). Basing a lot of the code from the standing water app since the general idea seems to be pretty similar. Need to look at how arg parser works (and how working through the node works in general)

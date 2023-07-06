@@ -18,12 +18,16 @@ def mouse_click(event, x, y,
     
         
     
+no_snow = True        
+for root, dirs, files in os.walk("C:/Users/alxto/Desktop/SAGE/summer2023/Arnold/snowclassifier/images/snowmodelimages/nosnow"):
+    for num,file in enumerate(files):
         
-for root, dirs, files in os.walk(".\images\W014\snowW014"):
-    for file in files:
+        print(f'File {num}/{len(files)}')
+        
         path = os.path.join(root, file)
         
         image = cv.imread(path)
+      
         height, width = image.shape[:2]
         # Calculate the width and height of each part
         part_width = width // 4
@@ -37,22 +41,23 @@ for root, dirs, files in os.walk(".\images\W014\snowW014"):
                 y = i * part_height
                 part = image[y:y + part_height, x:x + part_width]
                 parts.append(part)
-        for i, part in enumerate(parts):
-            if(i < 4):
-                cv.imwrite(f'./images/patches/nosnow/{file}-{i+1}.jpeg', part)
+        for j, part in enumerate(parts):
+            if(no_snow):
+                cv.imwrite(f'./snowclassifier/images/patches/nosnow/{file}-{j+1}.jpeg', part)
                 continue
-            cv.imshow(f"Part {i+1}", part)
-            cv.setMouseCallback(f"Part {i+1}", mouse_click)
+                 
+            cv.imshow(f"{file} {j+1}", part)
+            cv.setMouseCallback(f"{file} {j+1}", mouse_click)
             cv.waitKey(0)
             cv.destroyAllWindows()
            
             if snow == 0:
-                cv.imwrite(f'./images/patches/nosnow/{file}-{i+1}.jpeg', part)
+                cv.imwrite(f'./snowclassifier/images/patches/nosnow/{file}-{j+1}.jpeg', part)
             
             if snow == 1:
-                cv.imwrite(f'./images/patches/snow/{file}-{i+1}', part)
+                cv.imwrite(f'./snowclassifier/images/patches/snow/{file}-{j+1}.jpeg', part)
             if snow == 2:
-                cv.imwrite(f'./images/patches/unclear/{file}-{i+1}',part)
+                cv.imwrite(f'./snowclassifier/images/patches/unclear/{file}-{j+1}.jpeg',part)
             
             
 

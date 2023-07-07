@@ -8,8 +8,6 @@
 - Tested different camera functions to learn their purpose and operation
 - Met with Raj and Yungho to go over project details
 
-Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
-
 ### 06/09
 
 - Turned in experiential agreement for deliverables
@@ -46,9 +44,31 @@ Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0
 - Continued implementing argeparse with PTZ api
 
 
-### 06/19 Mon
+## Week 07/03 -- 07/08
+
+### 07/03 Mon
+
+- Continued working on the Sunapi README document for Hanwha cameras.
+
+### 07/04 Tue
+
+-Happy Fourth!
+
+### 07/05
+
+- Attended Required UCP Seminar with Robert Boomsba. (9am - 10am)
+- Attended required training SEC-160 Practical Preparedness for Workplace Violence. (10am-11am)
+- Attended guest speaker Dr. Daniele Lezzi's talk.  (11am-12pm)
+- 
 
 
+
+
+
+
+
+
+Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
 ## Week 05/29 -- 06/04
 

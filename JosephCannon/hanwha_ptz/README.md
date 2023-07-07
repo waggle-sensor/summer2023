@@ -18,13 +18,6 @@ Hello and welcome! This library is designed to provide control and configuration
 - from requests.auth import HTTPDigestAuth
 - from bs4 import BeautifulSoup
 
-## Installation
-Install the package through pip:
-
-````
-pip install 
-````
-
 ## Execution
 
 Example of use:
@@ -146,3 +139,8 @@ In terminal write:
 - In short form:
 - $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -s
 ````
+###Disclaimers:
+
+In terminal:
+
+- If camera is in continuous move, user must send stop command before doing a relative move. It is also recommended for an absolute command, area zoom, etc.

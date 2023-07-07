@@ -72,9 +72,9 @@ class CameraControl:
         current_tilt = float(resp.text.split()[1].split('=')[1])
         current_zoom = float(resp.text.split()[2].split('=')[1])
 
-        if abs(360 - current_pan) < 0.5 or current_pan < 0.5:
+        if abs(360 - current_pan) < 0.02 or current_pan < 0.02:
             # This if statement is necessary for when absolute pan is zero. When the camera position
-            # is requested, the query returned was either approximately zero or 360. This statement
+            # is requested, the query returned was either approximately 360 or zero. This statement
             # sets out to fix that bug by forcing the current pan position to be read as zero.
 
             current_pan = 0
@@ -82,6 +82,19 @@ class CameraControl:
         ptz_list = (current_pan, current_tilt, current_zoom)
 
         return ptz_list
+
+    def stop_control(self):
+        """
+        Operation to stop ongoing pan, tilt and zoom movements of absolute relative and
+        continuous type
+
+        Returns:
+            Returns the response from the device to the command sent
+
+        """
+
+        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'stop', 'action': 'control',
+                                                       'OperationType': 'All'})
 
     def absolute_control(self, pan: float = None, tilt: float = None, zoom: float = None, zoom_pulse: int = None,
                          channel: int = None):
@@ -123,13 +136,15 @@ class CameraControl:
         # Since operation finished will set pan equal to zero if it is approximately close,
         # pan must be equal to zero here as well as the finished_position will be zero
 
-        if abs(pan - 360) < 0.05:
+        if abs(pan - 360) < 0.02:
             pan = 0
 
         finished_position = pan + tilt + zoom
 
-        while abs(current_position - finished_position) > 0.5:
+        while abs(current_position - finished_position) > 0.01:
             current_position = np.sum(self.operation_finished())
+
+        time.sleep(0.5)
 
     def relative_control(self, pan: float = None, tilt: float = None, zoom: int = None, zoom_pulse: int = None,
                          channel: int = None):
@@ -168,7 +183,7 @@ class CameraControl:
             # set pan to go the other direction to reach the same location
 
             if (current_pan + pan) < 0:
-                pan = 360 - pan
+                pan = 360 + pan
 
         if tilt is not None:
 
@@ -223,10 +238,18 @@ class CameraControl:
         # The finished_position will be set to the current_position plus whatever relative changes
         # will be made.
 
-        finished_position = pan + tilt + zoom + current_position
+        if current_pan+pan == 360:
+            finished_position = tilt + zoom + current_position - current_pan
 
-        while abs(current_position - finished_position) > 0.5:
+        if current_pan+pan != 360:
+            finished_position = tilt + zoom + current_position + pan
+
+        while abs(current_position - finished_position) > 0.01:
             current_position = np.sum(self.operation_finished())
+            print(current_position)
+            print(finished_position)
+
+        time.sleep(0.5)
 
     def continuous_control(self, normalized_speed: bool = None, pan: int = None, tilt: int = None, zoom: int = None, focus: str = None):
         """
@@ -250,18 +273,6 @@ class CameraControl:
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'continuous', 'action': 'control',
                                                        'NormalizedSpeed': normalized_speed, 'Pan': pan,
                                                        'Tilt': tilt, 'Zoom': zoom, 'Focus': focus})
-
-    def stop_control(self):
-        """
-        Operation to stop ongoing pan, tilt and zoom movements of absolute relative and
-        continuous type
-
-        Returns:
-            Returns the response from the device to the command sent
-
-        """
-        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'stop', 'action': 'control',
-                                                       'OperationType': 'All'})
 
     def area_zoom(self, x1: int = None, x2: int = None, y1: int = None,
                   y2: int = None, tilewidth: int = None, tileheight: int = None):
@@ -782,23 +793,23 @@ def main():
                 terminal_control.swing_control(channel=channel, mode=mode)
 
             if i == 'group_control':
-                swing_param = ast.literal_eval(ordered_args[k])
+                group_param = ast.literal_eval(ordered_args[k])
 
-                channel, group, mode = swing_param[:3]
+                channel, group, mode = group_param[:3]
 
                 terminal_control.group_control(channel=channel, group=group, mode=mode)
 
             if i == 'tour_control':
-                swing_param = ast.literal_eval(ordered_args[k])
+                tour_param = ast.literal_eval(ordered_args[k])
 
-                channel, tour, mode = swing_param[:3]
+                channel, tour, mode = tour_param[:3]
 
                 terminal_control.tour_control(channel=channel, tour=tour, mode=mode)
 
             if i == 'trace_control':
-                swing_param = ast.literal_eval(ordered_args[k])
+                trace_param = ast.literal_eval(ordered_args[k])
 
-                channel, trace, mode = swing_param[:3]
+                channel, trace, mode = trace_param[:3]
 
                 terminal_control.trace_control(channel=channel, trace=trace, mode=mode)
 

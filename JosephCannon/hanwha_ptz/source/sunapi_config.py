@@ -12,6 +12,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 from bs4 import BeautifulSoup
 
+
 class CameraConfiguration:
     """
     Module for configuration of HANWHA cameras using Sunapi
@@ -40,15 +41,20 @@ class CameraConfiguration:
         resp = requests.get(url, auth=HTTPDigestAuth(self.__cam_user, self.__cam_password),
                             params=payload)
 
+        # resp = requests.post(url, auth=HTTPDigestAuth(self.__cam_user, self.__cam_password),
+        #                     params=payload)
+
+        print(payload)
         print(resp.url)
+        print(resp)
+        print(resp.text)
 
-        if (resp.status_code != 200) and (resp.status_code != 204):
-            soup = BeautifulSoup(resp.text, features="lxml")
-            logging.error('%s', soup.get_text())
-            if resp.status_code == 401:
-                sys.exit(1)
+        if resp.status_code == 200:
+            return resp.text
 
-        return resp
+        text = str(resp)
+        text += str(resp.text)
+        return text
 
     def swing_setup(self, action: str = None, channel: int = None, mode: str = None,
                     from_preset: int = None, to_preset: int = None, speed: int = None,
@@ -74,11 +80,12 @@ class CameraConfiguration:
             raise Exception(
                 "Unauthorized command: Please enter a string from the choices: 'Pan', 'Tilt', 'PanTilt'")
 
-        return self._camera_command('ptzconfig.cgi', {'msubmenu': 'swing', 'action': action,
+        resp = self._camera_command('ptzconfig.cgi', {'msubmenu': 'swing', 'action': action,
                                                       'Channel': channel, 'Mode': mode,
-                                                      'FromPreset': from_preset,
-                                                      'ToPreset': to_preset, 'Speed': speed,
-                                                      'DwellTime': dwell_time})
+                                                      'FromPreset': from_preset, 'ToPreset': to_preset,
+                                                      'Speed': speed, 'DwellTime': dwell_time})
+        if action == 'view':
+            print(resp)
 
     def group_setup(self, action: str = None, channel: int = None, group: int = None,
                     preset_sequence: int = None, preset: int = None, speed: int = None,
@@ -105,15 +112,16 @@ class CameraConfiguration:
 
               """
 
-        if action not in ("view", "add", "update", "remove", None):
+        if action not in ("set", "view", "add", "update", "remove", None):
             raise Exception(
                 "Unauthorized command: Please enter a string from the choices: 'view', 'add', 'update', 'remove'")
 
-        return self._camera_command('ptzconfig.cgi', {'msubmenu': 'group', 'action': action,
+        resp = self._camera_command('ptzconfig.cgi', {'msubmenu': 'group', 'action': action,
                                                       'Channel': channel, 'Group': group,
-                                                      'PresetSequence': preset_sequence,
-                                                      'Preset': preset, 'Speed': speed,
-                                                      'DwellTime': dwell_time})
+                                                      'PresetSequence': preset_sequence, 'Preset': preset,
+                                                      'Speed': speed, 'DwellTime': dwell_time})
+        if action == 'view':
+            print(resp)
 
 
 def main():
@@ -155,7 +163,8 @@ def main():
 
     ordered_args = dictionary.get('ordered_args')
 
-    terminal_control = CameraControl(args.ipAddress, args.username, args.password)  # calling the Class CameraControl
+    terminal_control = CameraConfiguration(args.ipAddress, args.username,
+                                           args.password)  # calling the Class CameraControl
 
     if ordered_args:
 
@@ -170,26 +179,26 @@ def main():
 
                 terminal_control.swing_config(channel=channel, mode=mode)
 
-            if i == 'group_config':
-                swing_param = ast.literal_eval(ordered_args[k])
+            if i == 'group_control':
+                group_param = ast.literal_eval(ordered_args[k])
 
-                channel, group, mode = swing_param[:3]
+                channel, group, mode = group_param[:3]
 
-                terminal_control.group_config(channel=channel, group=group, mode=mode)
+                terminal_control.group_control(channel=channel, group=group, mode=mode)
 
-            if i == 'tour_config':
-                swing_param = ast.literal_eval(ordered_args[k])
+            if i == 'tour_control':
+                tour_param = ast.literal_eval(ordered_args[k])
 
-                channel, tour, mode = swing_param[:3]
+                channel, tour, mode = tour_param[:3]
 
-                terminal_control.tour_config(channel=channel, tour=tour, mode=mode)
+                terminal_control.tour_control(channel=channel, tour=tour, mode=mode)
 
-            if i == 'trace_config':
-                swing_param = ast.literal_eval(ordered_args[k])
+            if i == 'trace_control':
+                trace_param = ast.literal_eval(ordered_args[k])
 
-                channel, trace, mode = swing_param[:3]
+                channel, trace, mode = trace_param[:3]
 
-                terminal_control.trace_config(channel=channel, trace=trace, mode=mode)
+                terminal_control.trace_control(channel=channel, trace=trace, mode=mode)
 
             k = k + 2
 

@@ -2,7 +2,75 @@
 
 Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
+## Week 07/03 -- 07/09
+
+### 07/07 Fri
+
+- Met with Dario and made a plan for next steps. The plan is on overleaf.
+- Downloading more images, and optimized the downloading workflow
+- Model trained with smaller images can be used to evaluate larger images.
+- Build a workflow for contrastive learning. (Model design, training, testing and validating)
+
+### 07/06 Thu
+
+- Based on what have been achieved, we need to narrow down the scope and focus on some science cases
+- Had another discussion with Dario and Bhupendra, here are the discussion details:
+- Science case: cloud
+  - altitude, texture of the clouds
+  - color usually doesn't matter, so will use Greyscale+IR (1-ch + 1-ch) image pairs
+  - narrow down to look at sky images only
+  - Look at attention map and check what clouds the models are paying attention to
+  - Bhupendra has a framework for motion data for cloud, might look into that.
+- **Issue**: after 07/04, all ANL nodes should not be used for analysis because of some hardware alternations.
+
+
+### 07/05 Wed
+
+- Attended the talk on `pyCOMPSS` framework. The framework can simplify the parallelization and deployment.
+Another library `dislib` on distributed computing was introduced as well.
+- Discussed with Dario and had following suggestions:
+  - KNN classification to compare RGB+IR and RGB+Greyscale to understand how the knowledge learned by these two frameworks
+  - Relative position of objects in an image should not matter as the model was trained to learn objects rather than positions.
+  - Next step: use random crop and flip to augment the images preventing models from cheating on using positions to do clustering
+  - The crop and flip must be synchronous among RGB and IR or Greyscale images to ensure they contain relatively similar information.
+    (field of view, objects in the image)
+- Color might not be important so we might use Greyscale+IR for a new model
+- New project on all-sky camera: SAGE nodes have fisheye cameras that we can use.
+
+
+### 07/04 Tue
+
+Independence day, no work
+
+### 07/03 Mon
+
+- Checked the model training was finished.
+- Start the evaluation.
+
+
 ## Week 06/26 -- 07/02
+
+### 06/30 Fri
+
+- Had another discussion on evaluating the model.
+  - It's possible that the model might be learning the pointing rather than the content of the image (i.e., poles, sky)
+  - Have to understand what mapping between RGB and IR the model learned.
+  - To compare what is learned, start another model to compare RGB+Greyscale images.
+  - The greyscale image is composed from RGB only.
+- Started the RGB + Greyscale model training and well perform evaluation later.
+
+### 06/29 Thu
+
+Get-together, no work
+
+### 06/28 Wed
+
+- Attended the LANS seminar on low-precision mathematic-hardware. The idea is very interesting -- by introducing
+stochastic rounding (i.e., probabilistically round up or down or zero or nearest). Improve the stagnation point and dynamic range by a lot!
+- Analyzed the clustering and got attention maps based on our discussion yesterday. The result still looks pretty similar as expected. Because
+we are minimizing the loss from two branches. 
+- Discussed with my research advisor at Wyoming about my research here at ANL and communicated with Dario about potential application of 
+self-supervised learning in astronomy. An idea is to combine photometry and spectroscopy information together through contrastive learning.
 
 ### 06/27 Tue
 

@@ -1,50 +1,68 @@
+import numpy as np
 from waggle.plugin import Plugin
 from waggle.data.vision import Camera
-import numpy as np
+
 import torch
 from torchvision import transforms
+import argparse
 
-def compute_mean_color(image):
-    return np.mean(image, (0, 1)).astype(float)
-
+#basically ripped from the surface water classifier at https://github.com/waggle-sensor/plugin-surfacewater
 def get_args():
-    pass
-#need to learn arg parse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-model', action = 'store', 
+                        dest='model', default='model.pth', 
+                        help='path to model')
+    parser.add_argument('-stream', dest='stream',
+                action='store', default="bottom",
+                help='ID or name of a stream, e.g. sample')
+    parser.add_argument(
+        '-debug', dest='debug',
+        action='store_true', default=False,
+        help='Debug flag')
+    parser.add_argument(
+        '-continuous', dest='continuous',
+        action='store_true', default=False,
+        help='Continuous run flag')
+    return parser.parse_args()
 
-def main():
-    with Plugin() as plugin, Camera() as camera:
-        for snapshot in camera.stream():
-            # compute mean color
-            mean_color = compute_mean_color(snapshot.data)
 
-            # print mean color
-            print(mean_color)
 
-            # publish color
-            plugin.publish("color.mean.r", mean_color[0], timestamp=snapshot.timestamp)
-            plugin.publish("color.mean.g", mean_color[1], timestamp=snapshot.timestamp)
-            plugin.publish("color.mean.b", mean_color[2], timestamp=snapshot.timestamp)
 
 
 def run(model, sample, plugin):
     image =sample.data
     timestamp = sample.timestamp
-    transformation = transforms.Compose([transforms.Resize((224,224)),
+    transformation = transforms.Compose([transforms.ToPILImage(),
+                                         transforms.Resize((224,224)),
                                          transforms.ToTensor()])
     image = transformation(image)
-    image = image.to(args.device)
+    image = image.to(args.device).unsqueeze(0)
     pred = model(image)
     result = torch.argmax(pred).item()
     if result == 0:
         print('no snow')
     elif result == 1:
         print('snow')
-    plugin.publish('env.binary.snow', result.item(), timestamp=timestamp)
+    plugin.publish('env.binary.snow', result, timestamp=timestamp)
 
 
 
 
 
-)
+
 if __name__ == "__main__":
-    main()
+    args = get_args()
+    if torch.cuda.is_available():
+        args.device = 'cuda'
+    else:
+        args.device = 'cpu'
+    model = torch.load(args.model, map_location=args.device)
+    model.eval()
+    while True:
+        with Plugin() as plugin, Camera() as camera:
+            sample = camera.snapshot()
+            run(model,sample, plugin)
+            if not args.continuous:
+                break
+    exit(0)
+            

@@ -1,9 +1,9 @@
 
 FROM waggle/plugin-base:1.1.1-ml
+COPY requirements.txt /app/
+RUN pip3 install --no-cache-dir -r /app/requirements.txt
+COPY model.pth /app/
+
+COPY app.py /app/
 WORKDIR /app
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-ENTRYPOINT ["python3", "app.py"]
+ENTRYPOINT ["python3", "/app/app.py"]

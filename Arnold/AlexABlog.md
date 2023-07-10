@@ -52,3 +52,10 @@ Downloaded images from W084. Ran into some problems finding a good node to pull 
 
 **July 6th 2023**
 The model performs with about 80% accuracy on the data from Idaho which is a good sign especially since it's a very different image than the nodes on the bad river. Also trying to learn how to create an application for the node now (hopefully to be deployed on the bad river node). Basing a lot of the code from the standing water app since the general idea seems to be pretty similar. Need to look at how arg parser works (and how working through the node works in general)
+
+**July 7th 2023**
+
+Got a working prototype of an app for the node and was able to login in to the waggle folder in the lcrc computer. Need to figure out how to actually test it.
+
+**July 10th 2023** 
+Spent some time today cleaning up my data for ease of use. I was keeping copies of images all over sorted in different categories. Have a new file (metadata.csv) that keeps track of which images have snow and which don't as well as an estimate of weather they are during the day or at night. I'm working on performing image segmentation on the snow using guassian mixed means, and it seems more feasible to perform it only on the images taken during the day where it is more clear what has snow and what doesn't. I got a preliminary model working but haven't figured out how to train it on multiple images (if that's even possible) so I'll try to think of a better method tomorrow. Regardless, I have some results which is a good sign that it can be done and may help me create an even better model with some extra steps or using this as a preprocessing step of some kind.

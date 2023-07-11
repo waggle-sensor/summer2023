@@ -599,3 +599,82 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> July 6, 2023 </summary>
+
+### July 6, 2023
+  
+  **Goal:** Adjusted Hyperparameters of Yolo-NAS models, and compared results
+  
+ Adjusted and finetuned hyperparameters for Yolo_Nas models
+    
+  * Trained Yolo-NAS-L model for 100 epochs with noise dataset to see improvement in model accuracy
+    * Adjusting model + training for longer period did not significantly improve mAP @ 50% 
+  * Adjusted batch sizes of Yolo_NAS-L model (again, no significant improvement)
+  * Accuracy for Yolo_NAS_L model trained with noisy images had a TP rate of `0.42` for rideshare vehicles (for noisy dataset), but significantly lower TP rate for clear images
+
+Other:
+  * Attended 5G workshop!     
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 7, 2023 </summary>
+
+### July 7, 2023
+  
+  **Goal:** Finetuned Hyperparameters for YoloV8 model
+  
+ Adjusted and finetuned parameters for YoloV8 (trained with noise) model
+    
+  * Developed tensorboard logs for Yolo-NAS (both M and L, with and without noise) and YoloV8 models, and saw YoloV8 model had highest F1 Accuracy score
+    * YolOV8 model with noise had mAP @ 50% confidence of `0.883` and mAP @ 95% confidence of `0.451` (training with noise increased mAP by ~0.1)
+  * Adjusted batch sizes of YoloV8 model to 32, 64, adjusted image transformations (shear, rotate, scale,...), and changed learning rate hyperparameters
+    * Again, saw no significant improvement in model performance after hyperparameter changes
+  * Recorded 4 intern video clips for Sage video!
+
+Other:
+  * Will have to start writing research paper and creating poster soon!     
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 10, 2023 </summary>
+
+### July 10, 2023
+  
+  **Goal:** Started working on new approach for improving model performance: creating new dataset
+  
+ Created python script to create new dataset of rideshare stickers using node images
+    
+  * Used custom-trained YoloV8 model (trained with clear + noise images on custom augmented dataset) to identify rideshare vehicles from Chicago node images
+  * Used YoloV8 predict's `save_crop` feature to crop and save predicted stickers (enclosed in bounding boxes) 
+    * Every 700 pics = ~50 stickers
+  * Will process node pictures to collect around 2000 stickers for another dataset
+    * Goal: Train YoloV8 model in another stage with new model-generated-dataste and see if accuracy is improved with 2-stage training process 
+
+Other:
+  * Attended Bob's Poster workshop for tips in creating an effective research poster/presentation
+  * Sage Panel will be taking place on July 18
+
+</details>
+
+
+
+

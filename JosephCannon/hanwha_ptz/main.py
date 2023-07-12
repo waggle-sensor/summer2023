@@ -1,11 +1,13 @@
 from source import sunapi_control
 from source import sunapi_config
+from source import ubnt_edgeswitch
 
-Camera1 = sunapi_control.CameraControl('10.31.81.11', 'admin', 'why1not#')
-Camera2 = sunapi_config.CameraConfiguration('10.31.81.11', 'admin', 'why1not#')
+Camera1 = sunapi_control.CameraControl('10.31.81.11', 'admin', '')
+Camera2 = sunapi_config.CameraConfiguration('10.31.81.11', 'admin', '')
+Switch1 = ubnt_edgeswitch.SwitchInformation('10.31.81.2', 'ubnt', '')
 
-# Camera1.relative_control(pan=80)
-# Camera1.continuous_control(normalized_speed=True, pan=10)
+# Camera1.relative_control(pan=180)
+# Camera1.continuous_control(normalized_speed=True, pan=40)
 # Camera1.stop_control()
 # Camera1.attributes_information()
 # Camera1.area_zoom(1000, 100, 1000, 100)
@@ -15,7 +17,7 @@ Camera2 = sunapi_config.CameraConfiguration('10.31.81.11', 'admin', 'why1not#')
 # Camera1.zoom_out()
 # Camera1.aux_control('WiperOn')
 # Camera1.attributes_information()
-# Camera1.absolute_control(zoom=9)
+# Camera1.absolute_control(tilt=-10)
 # Camera1.swing_control(channel=0, mode='PanTilt')
 # Camera1.group_control(channel=0, group=1, mode='Start')
 # Camera1.tour_control(channel=0, tour=1, mode='Stop')

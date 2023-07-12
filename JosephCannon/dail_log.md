@@ -59,7 +59,18 @@
 - Attended Required UCP Seminar with Robert Boomsba. (9am - 10am)
 - Attended required training SEC-160 Practical Preparedness for Workplace Violence. (10am-11am)
 - Attended guest speaker Dr. Daniele Lezzi's talk.  (11am-12pm)
-- 
+- Almost finished with the sunapi_control library. Began sunapi_config library.
+
+### 07/06
+
+- Attended guest speaker Dr. Ermin Wei's talk. (10am-11am)
+- Began working on Ubiquiti switch API.
+- Researched different methods of API calls, determined between xml and ssh.
+
+### 07/07
+
+
+## Week 07/10 -- 07/14
 
 
 

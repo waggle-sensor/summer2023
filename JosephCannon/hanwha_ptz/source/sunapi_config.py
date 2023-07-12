@@ -163,8 +163,7 @@ def main():
 
     ordered_args = dictionary.get('ordered_args')
 
-    terminal_control = CameraConfiguration(args.ipAddress, args.username,
-                                           args.password)  # calling the Class CameraControl
+    terminal_control = CameraConfiguration(args.ipAddress, args.username, args.password)  # calling the Class CameraConfiguration
 
     if ordered_args:
 

@@ -59,3 +59,9 @@ Got a working prototype of an app for the node and was able to login in to the w
 
 **July 10th 2023** 
 Spent some time today cleaning up my data for ease of use. I was keeping copies of images all over sorted in different categories. Have a new file (metadata.csv) that keeps track of which images have snow and which don't as well as an estimate of weather they are during the day or at night. I'm working on performing image segmentation on the snow using guassian mixed means, and it seems more feasible to perform it only on the images taken during the day where it is more clear what has snow and what doesn't. I got a preliminary model working but haven't figured out how to train it on multiple images (if that's even possible) so I'll try to think of a better method tomorrow. Regardless, I have some results which is a good sign that it can be done and may help me create an even better model with some extra steps or using this as a preprocessing step of some kind.
+
+**July 12th 2023**
+Got access to the W083 node and got my plugin up and running. Spent time using docker and building it on the node, and prelimary tests are good (saying there isn't snow).
+
+**July 13th 2023**
+Had my first real presentation (with slides) this morning that I think went pretty well. Got some good suggestions for things to change or look at. Added a solarization transform to the model to reduce it's reliance on color, and plan on cropping the image to exclude the horizon line above the images for the W083 node. Also started looking

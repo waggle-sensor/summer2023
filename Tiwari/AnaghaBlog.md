@@ -677,4 +677,54 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> July 11, 2023 </summary>
+
+### July 11, 2023
+  
+  **Goal:** Finish creating new dataset using model_1 predictions
+  
+ Created python script to scrape through Chicago node images and save rideshare stickers
+    
+  * Downloaded around 5000-6000 images from Chicago nodes to collect around 260 rideshare stickers
+  * Spent day downloading node images and filtering rideshare stickers for new dataset
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 12, 2023 </summary>
+
+### July 12, 2023
+  
+  **Goal:** Create and train model2 on new rideshare dataset
+  
+ Train new model and see if improvements in accuracy/performance
+    
+  * Used Model1 weights to finetune and train Model2 using new dataset
+    * Trained for ~100 epochs -> ~70 epochs to avoid overfitting
+  * Tested on zoomed-in rideshare stickers, led to very high accuracy (m@P @ 95% of `0.954`)
+    * Tested model2 on regular (street) images, very low accuracy (m@P @ 95% of `0.000154`)
+  * Tried finetuning hyperparameters but led to no improvements (regular pictures too small to detect rideshare stickers)
+  * Goal for tomorrow: see if 2 stage model filter system leads to higher accuracy 
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
 

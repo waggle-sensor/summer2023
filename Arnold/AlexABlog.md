@@ -64,4 +64,7 @@ Spent some time today cleaning up my data for ease of use. I was keeping copies 
 Got access to the W083 node and got my plugin up and running. Spent time using docker and building it on the node, and prelimary tests are good (saying there isn't snow).
 
 **July 13th 2023**
-Had my first real presentation (with slides) this morning that I think went pretty well. Got some good suggestions for things to change or look at. Added a solarization transform to the model to reduce it's reliance on color, and plan on cropping the image to exclude the horizon line above the images for the W083 node. Also started looking
+Had my first real presentation (with slides) this morning that I think went pretty well. Got some good suggestions for things to change or look at. Added a solarization transform to the model to reduce it's reliance on color, and plan on cropping the image to exclude the horizon line above the images for the W083 node. I tried using local binary patterns but those performed even worse than color even on the image they were fit to. It may be a parameter problem, but it didn't seem to capture the difference in textures well enough for clustering. I've also looked at Gabor filters which may be more useful but didn't have time to implement it. Refactored my dataset to crop out the sky/horizon on the W083 images to get a better more accurate dataset for that node at least.
+
+**July 17th 2023**
+Debated the best way to format the patches to create an actually useful model. Felt like snow on the ground might be more useful but much harder to train the model on such a small dataset, and so opted to instead classify images based on how much snow is in the image in general

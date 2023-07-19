@@ -26,7 +26,7 @@ Example of use:
 from source import sunapi_control
 
 
-Camera1 = sunapi_control.CameraControl('{**ip_address**}', '{**username**}', '{**password**}')
+Camera1 = sunapi_control.CameraControl('<ip_address>', '<username>', '<password>')
 
 Camera1.absolute_control(80, 30, 20)
 Camera1.relative_control(pan=80)
@@ -51,9 +51,9 @@ Camera1.relative_control(pan=80)
 *	`continuous_control(normalized_speed, pan, tilt, zoom)` - Operation for continuous Pan, Tilt, and Zoom movements.
 	-	normalized_speed (bool): Enables or disables the normalized speed range for Pan, Tilt, and Zoom. If normalized_speed is not sent, or set as False, the Pan, Tilt, and Zoom speed
 range will be device dependent values; If normalized_speed is set as True, the speed values for Pan, Tilt, and Zoom will be in the range of -100 to 100. normalized_speed must be sent together with Pan, Tilt, or Zoom.
-	-	pan (int): Speed of Pan movement. (0, ... 6)
-	-	tilt (int): Speed of Tilt movement. (0, ... 6)
-	-	zoom (int): Speed of Zoom movement (0, ... 6)
+	-	pan (int): Speed of Pan movement. (0, ... 6) or (-100, ... 100)
+	-	tilt (int): Speed of Tilt movement. (0, ... 6) or (-100, ... 100)
+	-	zoom (int): Speed of Zoom movement (0, ... 6) or (-100, ... 100)
 	
 *	`stop_control()` - Operation to stop ongoing Pan, Tilt, and Zoom movements
 
@@ -95,9 +95,9 @@ Here are some examples of how to use the Sunapi from terminal for the XNP-6400RW
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --absolute_Pan 20
+- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
 - In short form:
-- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -ap 20
+- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ap 20
 ````
 
 ### Relative Tilt -30&deg; 
@@ -105,9 +105,9 @@ In terminal write:
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --relative_Tilt -30
+- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --relative_Tilt -30
 - In short form:
-- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -rt -30
+- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -rt -30
 ````
 
 ### Continuous control of Pan at a movement speed of 5
@@ -115,9 +115,9 @@ In terminal write:
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --continuous_control_Pan 5
+- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --continuous_control_Pan 5
 - In short form:
-- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -ccp 5
+- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ccp 5
 ````
 
 ### Pan to the absolute position of pan 20&deg;
@@ -125,9 +125,9 @@ In terminal write:
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --absolute_Pan 20
+- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
 - In short form:
-- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -ap 20
+- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ap 20
 ````
 
 ### Stop all action;
@@ -135,9 +135,9 @@ In terminal write:
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress {**Device IP**} --username {**username**} --password {**password**} --Stop
+- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --Stop
 - In short form:
-- $ python3 main.py -ip {**Device IP**} -un {**username**} -pw {**password**} -s
+- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -s
 ````
 ###Disclaimers:
 

@@ -68,3 +68,6 @@ Had my first real presentation (with slides) this morning that I think went pret
 
 **July 17th 2023**
 Debated the best way to format the patches to create an actually useful model. Felt like snow on the ground might be more useful but much harder to train the model on such a small dataset, and so opted to instead classify images based on how much snow is in the image in general
+
+**July 18th 2023**
+The model works well on the test and training sets from the W083 node (90% accuracy for all three classes) which is a good early sign, but not sure how it will do on new data since there are a lot of examples so it could face the same problem as the earlier model.

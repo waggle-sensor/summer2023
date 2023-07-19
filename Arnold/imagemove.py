@@ -1,6 +1,3 @@
-import os
+import splitfolders
 
-for root, dirs, files in os.walk(".\images/patches/W083"):
-    for file in files:   
-        path = os.path.join(root, file)
-        os.remove(path)
+splitfolders.fixed("./images/patches/imagecover/", "./images/patches/ic_modelset",seed  = 124321,fixed = (5330,1330,1330))

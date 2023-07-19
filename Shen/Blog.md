@@ -72,3 +72,6 @@ Yesterday I was notified after I had started working on my testing split data to
 
 # Monday July 17th, 2023
 Today, I got started on writing the framework for my new regression model using the csv file that I had written the previous week. I looked through many websites and tutorials and eventually found a framework that I could use as an example, but I had to make a few tweaks to calculate the correct validation loss. The validation loss was originally way too high and way too low, but after some experimentation I got the average to work.
+
+# Wednesday July 19th, 2023
+Today, I worked on testing different pretrained models including Resnet18, Resnet34, and Resnet50 while also testing an augment dataset with rotated images. It seemed that the augmented dataset with the Resnet50 model performed the best with a MAE of about 82 while the resnet50 and the older dataset had an MAE of around 84. I think that in my next step, I may try to augment the data using contrast to create some noise or help the model generalize.  

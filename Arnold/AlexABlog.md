@@ -71,3 +71,6 @@ Debated the best way to format the patches to create an actually useful model. F
 
 **July 18th 2023**
 The model works well on the test and training sets from the W083 node (90% accuracy for all three classes) which is a good early sign, but not sure how it will do on new data since there are a lot of examples so it could face the same problem as the earlier model.
+
+**July 19th 2023**
+Sounds like we're kind of at a dead end for the snow side of the project which is annoying but it is what it is. I updated the model and app on the node with the improvements I've been working on and I'm shelving the segmentation stuff since it sounds like it won't be needed. Moved on to working on a method to enhance images which can be useful in tasks such as the rideshare stickers since the images are so small and could lead to better predictions if upscaled. Had some trouble with scp but got the rideshare files from Anagha which will be useful.

@@ -74,3 +74,20 @@ The model works well on the test and training sets from the W083 node (90% accur
 
 **July 19th 2023**
 Sounds like we're kind of at a dead end for the snow side of the project which is annoying but it is what it is. I updated the model and app on the node with the improvements I've been working on and I'm shelving the segmentation stuff since it sounds like it won't be needed. Moved on to working on a method to enhance images which can be useful in tasks such as the rideshare stickers since the images are so small and could lead to better predictions if upscaled. Had some trouble with scp but got the rideshare files from Anagha which will be useful.
+
+**July 20th 2023**
+Ideas for applications
+1. UNET architecture from Seongha 
+2. Measuring stick enhancement
+3. Using IR image dataset
+4. Use new dataset from generated from Anagha plugin 
+
+Citations so far
+- Improving Scene Text Image Super-Resolution via Dual Prior Modulation Network
+- Image Super-Resolution via Iterative Refinement
+- ESRGAN: Enhanced Super-Resolution Generative Adversarial Networks
+- Transformer for Single Image Super-Resolution
+Unsupervised approach for one image: “Zero-Shot” Super-Resolution using Deep Internal Learning
+
+Two approaches that seem interesting are the self learning approaches such as ZSSR and MZSR which preform better on real world images, but are slower to use since they train for one image. However, they don't require large training sets or even a HR image pair. Could be worth testing. ZSSR might be a good first model to try, then MZSR if that fails to give readable measurements.
+The original is in tensorflow (which I am not familiar with and may not integrate as well with other plugins), but I found a pytorch implementation of ZSSR [here](https://github.com/HarukiYqM/pytorch-ZSSR)

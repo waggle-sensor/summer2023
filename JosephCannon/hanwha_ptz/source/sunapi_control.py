@@ -400,9 +400,11 @@ class CameraControl:
 
         # current_zoom = self.operation_finished()[2]
 
-        self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
+        resp = self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
                                                 'X1': x1, 'X2': x2, 'Y1': y1, 'Y2': y2, 'TileWidth': tilewidth,
                                                 'TileHeight': tileheight})
+
+        print(resp.url + "\n" + str(resp.status_code) + "\n" + resp.text)
 
         if tilewidth is None:
             tilewidth = 10000
@@ -515,8 +517,32 @@ class CameraControl:
             Returns the response from the device to the command sent
 
         """
-        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
+        init_pos, initial_zoom_pulse = self.operation_finished()  # takes current position values
+
+        current_zoom_pulse = initial_zoom_pulse  # provides the absolute zoom_pulse position
+
+        resp = self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
                                                        'Type': '1x'})
+
+        print(resp.url + "\n" + str(resp.status_code) + "\n" + resp.text)
+
+        start_time = time.time()
+
+        while current_zoom_pulse != 0:
+
+            init_pos, initial_zoom_pulse = self.operation_finished()  # update current position array and zoom_pulse
+
+            current_zoom_pulse = initial_zoom_pulse  # update current_zoom_pulse
+
+        time.sleep(0.5)
+
+        print('Finished')
+
+        end_time = time.time()
+
+        elapsed_time = end_time - start_time
+
+        print("elapsed_time: " + str(elapsed_time))
 
     def aux_control(self, command: str = None):
         """

@@ -24,7 +24,7 @@ print(type(stdout))
 print(type(stderr))
 
 # Optionally, send data via STDIN, and shutdown when done
-stdin.write('enable\nwhy1not2\n?\nq\nconfigure\ninterface 0/1\npoe opmode auto\n')
+stdin.write('enable\npassword\n?\nq\nconfigure\ninterface 0/1\npoe opmode auto\n')
 # poe opmode shutdown
 # poe opmode auto
 stdin.channel.shutdown_write()

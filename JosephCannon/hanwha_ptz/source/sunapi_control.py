@@ -64,17 +64,17 @@ class CameraControl:
         current_pan = float(resp.text.split()[0].split('=')[1])
         current_tilt = float(resp.text.split()[1].split('=')[1])
         current_zoom = float(resp.text.split()[2].split('=')[1])
+        current_zoom_pulse = float(resp.text.split()[3].split('=')[1])
 
         if abs(360 - current_pan) < 0.02 or current_pan < 0.02:
             # This if statement is necessary for when absolute pan is zero. When the camera position
             # is requested, the query returned was either approximately 360 or zero. This statement
             # sets out to fix that bug by forcing the current pan position to be read as zero.
-
             current_pan = 0
 
         ptz_list = (current_pan, current_tilt, current_zoom)
 
-        return ptz_list
+        return ptz_list, current_zoom_pulse
 
     def stop_control(self):
         """
@@ -108,7 +108,8 @@ class CameraControl:
 
         """
 
-        init_pos = self.operation_finished()  # takes current position values as an array
+        init_pos, initial_zoom_pulse = self.operation_finished()  # takes current (pan, tilt, zoom) values as an array
+                                                                  # and initial_zoom_pulse
 
         resp = self._camera_command('ptzcontrol.cgi', {'msubmenu': 'absolute', 'action': 'control',
                                                        'Pan': pan, 'Tilt': tilt, 'Zoom': zoom,
@@ -118,32 +119,89 @@ class CameraControl:
 
         current_position = np.sum(init_pos)  # sums elements in the array
 
+        current_zoom_pulse = initial_zoom_pulse  # set current_zoom_pulse to the initial_zoom_pulse position
+
         """
         If either pan, tilt, or zoom were not chosen, set their final position to be equal to
         their current position
         
         """
+
+        error_margin = 0.4
+
         if pan is None:
             pan = init_pos[0]
+            error_margin = error_margin-0.1
 
         if tilt is None:
             tilt = init_pos[1]
+            error_margin = error_margin-0.1
 
         if zoom is None:
             zoom = init_pos[2]
-
-        # Since operation finished will set pan equal to zero if it is approximately close,
-        # pan must be equal to zero here as well as the finished_position will be zero
-
+            error_margin = error_margin-0.1
+        """
+        Since operation finished will set pan equal to zero if it is approximately close,
+        pan must be set equal to zero here as well, since the finished_position pan will be zero
+        
+        """
         if abs(pan - 360) < 0.02:
             pan = 0
 
-        finished_position = pan + tilt + zoom
+        finished_position = pan + tilt + zoom  # given values for the finished position
 
-        while abs(current_position - finished_position) > 0.01:
-            current_position = np.sum(self.operation_finished())
+        i = int()
 
-        time.sleep(0.5)
+        start_time = time.time()
+
+        if zoom_pulse is None:
+
+            while abs(current_position - finished_position) > error_margin:
+
+                final_position = current_position  # final_position = last position recorded
+
+                init_pos, initial_zoom_pulse = self.operation_finished()  # update current position array and zoom_pulse
+
+                current_position = np.sum(init_pos)  # update current position
+
+                if final_position == current_position:  # if the final position and current position are the same
+                    i = i + 1  # add one to counter
+
+                if i == 5:  # if the current_position and final_position have been the same for five times in a row
+                    print('end of command error')
+                    break  # break the loop
+
+            time.sleep(1)
+
+        else:  # if zoom pulse is True, pass in zoom_pulse as final zoom_pulse
+            finished_zoom_pulse = zoom_pulse  # finished value given for zoom_pulse
+
+            while abs(current_zoom_pulse - finished_zoom_pulse) > 5:
+
+                final_zoom_pulse = current_zoom_pulse  # final_zoom_pulse = last zoom pulse recorded
+
+                time.sleep(0.1)
+
+                init_pos, initial_zoom_pulse = self.operation_finished()  # update current position array and zoom_pulse
+
+                current_zoom_pulse = initial_zoom_pulse  # update current_zoom_pulse
+
+                if final_zoom_pulse == current_zoom_pulse:  # if the final_zoom_pulse and current_zoom_pulse are the same
+                    i = i + 1  # add one to counter
+
+                if i == 5:  # if the current_zoom_pulse and final_zoom_pulse have been the same for five times in a row
+                    print('end of command error')
+                    break  # break the loop
+
+            time.sleep(0.5)
+
+        print('Finished')
+
+        end_time = time.time()
+
+        elapsed_time = end_time - start_time
+
+        print("elapsed_time: " + str(elapsed_time))
 
     def relative_control(self, pan: float = None, tilt: float = None, zoom: int = None, zoom_pulse: int = None,
                          channel: int = None):
@@ -160,7 +218,7 @@ class CameraControl:
 
         """
 
-        init_pos = self.operation_finished()  # takes current position values as an array
+        init_pos, initial_zoom_pulse = self.operation_finished()  # takes current position values as an array
 
         current_position = np.sum(init_pos)  # sums elements in the initial position array
 
@@ -169,6 +227,8 @@ class CameraControl:
         current_tilt = init_pos[1]  # provides the absolute tilt position
 
         current_zoom = init_pos[2]  # provides the absolute zoom position
+
+        current_zoom_pulse = initial_zoom_pulse  # provides the absolute zoom_pulse position
 
         if pan is not None:
 
@@ -212,6 +272,11 @@ class CameraControl:
             elif (current_zoom + zoom) < 1:
                 zoom = 1 - current_zoom
 
+        """
+        If current_pan is zero, then do absolute move from the zero position. Sometimes zero is read as 359.9... and
+        thus relative move will not go beyond zero and will stall there.
+        
+        """
         if current_pan != 0:
             resp = self._camera_command('ptzcontrol.cgi', {'msubmenu': 'relative', 'action': 'control',
                                                            'Pan': pan, 'Tilt': tilt, 'Zoom': zoom,
@@ -239,18 +304,57 @@ class CameraControl:
         # The finished_position will be set to the current_position plus whatever relative changes
         # will be made.
 
-        if current_pan + pan == 360:
+        if current_pan + pan == 360:  # pan at 360 will be set to zero. Remove pan from finished_position
             finished_position = tilt + zoom + current_position - current_pan
 
-        if current_pan + pan != 360:
+        else:
             finished_position = tilt + zoom + current_position + pan
 
-        while abs(current_position - finished_position) > 0.01:
-            current_position = np.sum(self.operation_finished())
-            print(current_position)
-            print(finished_position)
+        i = int()
+        start_time = time.time()
 
-        time.sleep(0.5)
+        if zoom_pulse is None:
+
+            while abs(current_position - finished_position) > 0.5:
+
+                final_position = current_position  # final_position = last position recorded
+
+                init_pos, initial_zoom_pulse = self.operation_finished()  # update current position array and zoom_pulse
+
+                current_position = np.sum(init_pos)  # update current position
+
+                if final_position == current_position:  # if the final position and current position are the same
+                    i = i + 1  # add one to counter
+
+                if i == 5:  # if the current_position and final_position have been the same for five times in a row
+                    break  # break the loop
+
+        else:  # if zoom pulse is True, pass in zoom_pulse as final_zoom_pulse
+
+            i = int()
+
+            while i < 2:
+
+                final_zoom_pulse = current_zoom_pulse  # final_zoom_pulse = last zoom pulse recorded
+
+                time.sleep(0.2)
+
+                init_pos, initial_zoom_pulse = self.operation_finished()  # update current position array and zoom_pulse
+
+                current_zoom_pulse = initial_zoom_pulse  # update current_zoom_pulse
+
+                if final_zoom_pulse == current_zoom_pulse:  # if the final_zoom_pulse and current_zoom_pulse are the same
+                    i = i + 1  # add one to counter
+
+        time.sleep(1)
+
+        print('Finished')
+
+        end_time = time.time()
+
+        elapsed_time = end_time - start_time
+
+        print("elapsed_time: " + str(elapsed_time))
 
     def continuous_control(self, normalized_speed: bool = None, pan: int = None, tilt: int = None, zoom: int = None,
                            focus: str = None):
@@ -294,32 +398,52 @@ class CameraControl:
 
         """
 
-        current_zoom = self.operation_finished()[2]
+        # current_zoom = self.operation_finished()[2]
 
-        self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
+        resp = self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
                                                 'X1': x1, 'X2': x2, 'Y1': y1, 'Y2': y2, 'TileWidth': tilewidth,
                                                 'TileHeight': tileheight})
 
-        """
-        Checks to see if area zoom is finished
+        print(resp.url + "\n" + str(resp.status_code) + "\n" + resp.text)
 
-        """
         if tilewidth is None:
             tilewidth = 10000
 
         if tileheight is None:
             tileheight = 10000
 
-        print(tileheight)
-        relative_zoom = tileheight / abs(y1 - y2)
+        init_pos, initial_zoom_pulse = self.operation_finished()  # takes current (pan, tilt, zoom) values as an array
+                                                                  # and initial_zoom_pulse
 
-        final_zoom = current_zoom * relative_zoom
-        print(current_zoom)
-        print(final_zoom)
+        current_zoom_pulse = initial_zoom_pulse  # provides the absolute zoom_pulse position
+        """
+        Checks to see if area zoom is finished
 
-        while abs(current_zoom - final_zoom) > 0.5:
-            current_zoom = self.operation_finished()[2]
-            print(current_zoom)
+        """
+        i = int()
+
+        start_time = time.time()
+
+        while i < 2:
+
+            final_zoom_pulse = current_zoom_pulse  # final_zoom_pulse = last zoom pulse recorded
+
+            time.sleep(0.2)
+
+            init_pos, initial_zoom_pulse = self.operation_finished()  # update current position array and zoom_pulse
+
+            current_zoom_pulse = initial_zoom_pulse  # update current_zoom_pulse
+
+            if final_zoom_pulse == current_zoom_pulse:  # if the final_zoom_pulse and current_zoom_pulse are the same
+                i = i + 1  # add one to counter
+
+        print('Finished')
+
+        end_time = time.time()
+
+        elapsed_time = end_time - start_time
+
+        print("elapsed_time: " + str(elapsed_time))
 
     def movement_control(self, direction: str = None, movespeed: float = None):
         """
@@ -393,8 +517,32 @@ class CameraControl:
             Returns the response from the device to the command sent
 
         """
-        return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
+        init_pos, initial_zoom_pulse = self.operation_finished()  # takes current position values
+
+        current_zoom_pulse = initial_zoom_pulse  # provides the absolute zoom_pulse position
+
+        resp = self._camera_command('ptzcontrol.cgi', {'msubmenu': 'areazoom', 'action': 'control',
                                                        'Type': '1x'})
+
+        print(resp.url + "\n" + str(resp.status_code) + "\n" + resp.text)
+
+        start_time = time.time()
+
+        while current_zoom_pulse != 0:
+
+            init_pos, initial_zoom_pulse = self.operation_finished()  # update current position array and zoom_pulse
+
+            current_zoom_pulse = initial_zoom_pulse  # update current_zoom_pulse
+
+        time.sleep(0.5)
+
+        print('Finished')
+
+        end_time = time.time()
+
+        elapsed_time = end_time - start_time
+
+        print("elapsed_time: " + str(elapsed_time))
 
     def aux_control(self, command: str = None):
         """
@@ -521,6 +669,31 @@ class CameraControl:
         print(resp.url + "\n" + str(resp.status_code) + "\n" + resp.text)
 
         return resp
+
+    def snap_shot(self, directory: str = None):
+        """
+            Sends camera command snapshot
+            Returns:
+                 Returns the response from the device to the command sent
+
+        """
+
+        resp = self._camera_command('video.cgi', {'msubmenu': 'snapshot', 'action': 'view'})
+
+        print(resp.url + "\n" + str(resp.status_code) + "\n")
+
+        if directory is None:  # if no directory is passed
+            a1 = __file__  # copy source 'sunapi_control.py' directory
+            string = a1.replace('/source', '/snapshots')  # save image to file 'snapshots' instead of source
+            idx = string.rfind('/')  # remove name of .py file from end of string
+            if (idx != -1):  # only do this if '/' is found in directory
+                string = string[:idx + 1]  # remove characters until '/' is reached
+            directory = string + time.strftime('%b_%d_%Y_%H_%M_%S_') + '.jpg'  # concatenate 'snapshots' directory with '.jpg' as this is where the image will be saved on the local machine
+
+        # Save image in a set directory
+        if resp.status_code == 200:
+            with open(directory, 'wb') as f:
+                f.write(resp.content)
 
 
 def main():

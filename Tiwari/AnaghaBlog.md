@@ -727,4 +727,107 @@ Other:
 
 
 
+<br/>
+
+
+
+<details>
+<summary> July 13, 2023 </summary>
+
+### July 13, 2023
+  
+  **Goal:** Developed 2 stage model filter system to zoom in to possible rideshare stickers
+  
+ Used 2 YoloV8 models to identify rideshare stickers from full-sized camera images
+    
+  * Used Model1 weights to initially detect possible stickers from camera node images
+  * Saved model1 predictions and detected possible rideshare stickers from Model2 weights
+  * Developed python script to evaluate testing images on the 2-stage model system
+    * 2-Stage system was able to identify 50 out of 56 rideshare sticker images correctly (`~90%` accuracy) 
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 14, 2023 </summary>
+
+### July 14, 2023
+  
+  **Goal:** Set up Plugin-Rideshare repo
+  
+ Initial set-up and prep for plugin-rideshare app!
+    
+  * Forked plugin-numpy-example to create own plugin-rideshare
+    * Included necessary ECR media, Sage.yaml file, and Dockerfile  
+  * Started to formulate Dockerfile with necessary libraries, added model weights
+  * In process of getting LCRC account set up
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 17, 2023 </summary>
+
+### July 17, 2023
+  
+  **Goal:** Set up LCRC account to store model weights files
+  
+ Accessed LCRC account to add necessary files on Dockerfile for plugin-repo
+    
+  * Stored model1 and model2 `best.pt` weights to add onto plugin `app.py` dockerfile
+    * Included necessary ECR media, Sage.yaml file, and Dockerfile  
+  * Started to formulate Dockerfile with necessary libraries, added model weights
+  * Started work on `app.py` plugin file
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 18, 2023 </summary>
+
+### July 18, 2023
+  
+  **Goal:** Worked on `app.py` plugin file
+  
+ Wrote preprocess and postprocess functions
+    
+  * In `app.py` file, wrote `preprocess` function to prepare video frame image for stage1 model detection
+  * Used numpy and opencv image augmentation libraries to resize video frame amd make it a suitable input for YoloV8 model
+  * Wrote `postprocess` function to analyze output detection results
+    * Traverse through results and boxes object returned by YoloV8 model to collect detected class name, timestamp, and cropped image
+    * Used `plugin.publish` to print out # of rideshare stickers detected at specific timestamp
+    * Published detected cropped rideshare sticker to ECR 
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
 

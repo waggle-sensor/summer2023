@@ -2,6 +2,8 @@
 
 #### Here, I will write daily updates for the work done on the Waggle-Sensor project, specifically in understanding feasibility of Waggle sensors in anayzing traffic flow and concentration of ride-sharing vehicles through the streets of Chicago.
 
+#### [Rideshare-Detection Plugin Repo](https://github.com/AnaghaTiwari/plugin-rideshare)
+
 <br/>
 
 <details>
@@ -822,6 +824,117 @@ Other:
     * Traverse through results and boxes object returned by YoloV8 model to collect detected class name, timestamp, and cropped image
     * Used `plugin.publish` to print out # of rideshare stickers detected at specific timestamp
     * Published detected cropped rideshare sticker to ECR 
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 19, 2023 </summary>
+
+### July 19, 2023
+  
+  **Goal:** Worked on `app.py` plugin file
+  
+ Wrote detect function for plugin app
+    
+  * Wrote "detect" function for app, using Model1 and Model2 weights
+    * Added model weights onto Dockerfile through LCRC
+  * First wrote and tested stage1 model detections
+    * Function received sample image from camera frame, preprocessed image, then fed image into model1 for sticker detection
+  * Debugged app file 
+      
+
+Other:
+  * Edited Sage NSF video
+
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 20, 2023 </summary>
+
+### July 20, 2023
+  
+  **Goal:** Worked on `app.py` plugin file
+  
+ Wrote main function, formulated Sage.yaml file
+    
+  * In `app.py` file, wrote `main` function with "YoloV8" object attributes
+  * Wrote Sage.yaml file with necessary plugin information and descriptions
+  * Asked Yongho for testing node access
+
+Other:
+  * Edited Sage NSF video
+  * Finished SULI Poster (also involved feedback from research group)
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 21, 2023 </summary>
+
+### July 21, 2023
+  
+  **Goal:** Debugged and tested plugin
+  
+ Received W023 node access for plugin testing 
+    
+  * Created Sage account for ssh node access
+    * Developed ssh key and input into Sage account/portal
+  *  Created GitHub repo for app with proper documents needed for testing
+  *  Started testing on W023 node
+    * Debugged app.py main plugin file and Dockerfile
+    * YoloV8 library not installing through Dockerfile? (Goal for tomorrow)
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 24, 2023 </summary>
+
+### July 24, 2023
+  
+  **Goal:** Finished app.py plugin
+  
+ Tested app.py plugin file, and evaluated algorithm with dummy testing image
+    
+  * Debugged plugin while testing on null inputs (no rideshare stickers detected)
+    * YoloV8 library not installing due to older version of Python running on Nvidia GPU in Waggle nodes (YoloV8 requires latest version Python 3.7) -> for now, model will run on Raspberry Pi
+  * Updated file with 2 stage model system
+    * App will now receive predictions from Model1 and again detect for rideshare stickers using Model2 weights
+  * Used testing image to test and debug app
+  * Rewrote app to accept constant video stream as input and feed frames from stream rather than fixed image to models
 
 Other:
   * Edited Sage NSF video

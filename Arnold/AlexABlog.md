@@ -91,3 +91,21 @@ Unsupervised approach for one image: “Zero-Shot” Super-Resolution using Deep
 
 Two approaches that seem interesting are the self learning approaches such as ZSSR and MZSR which preform better on real world images, but are slower to use since they train for one image. However, they don't require large training sets or even a HR image pair. Could be worth testing. ZSSR might be a good first model to try, then MZSR if that fails to give readable measurements.
 The original is in tensorflow (which I am not familiar with and may not integrate as well with other plugins), but I found a pytorch implementation of ZSSR [here](https://github.com/HarukiYqM/pytorch-ZSSR)
+
+https://arxiv.org/pdf/2206.01777.pdf A lightweight edge-computing friendly friendly version, but might not work on real world images. The major problem with a lot of networks is that they only perform well on specific degradation patterns, so need to find a model that does well on RL datasets or retrain a model on a custom dataset (like was suggested during the meeting). For practical use it would likely need to be retrained for the specific camera used on the nodes since those will be the best way to correct for the degradation on the nodes.
+
+**July 21st 2023**
+Ran some tests with ZSSR using the measuring stick and rideshare images. Overall quality was pretty good, but where the image was indecipherable it didn't help too much. With the measuring sticks it might actually be better because it increases the size of the ticks even if the numbers themselves aren't any clearer. If we can get a dataset using the actual camera on the node it might work better
+
+**July 24th 2023**
+Updated my snow plugin to download the .pth file from _LCRC_ instead of being uploaded from my computer. Also started working on my snow classifier plog post for next week, should be relatively straightforward.
+
+On the super-resolution front, I've started implementing SRCNN, which is a simple convolutional network. There are a lot of more complicated versions but given time constraints (and my own limitations) I'll start with this. If it works great, if it doesn't I'll try other methods. ZSSR will be a good pretrained model to compare it to. Using the Div2k dataset to train the model. A common method is to use bicubic resampling to create the LRimage pair, so that's what I'll start with. Next thing will be the unknown degradation to mirror the conditions on the node camera.
+
+Wrote the simple model, downloaded an initial train/test set of DIV2K and set up a dataset to load the data into tensors. Had to do it lazily due to memory constraints which will impact speed but shouldn't be terrible hopefully.
+
+**July 25th 2023**
+Trained a preliminary SRCNN model. It trains by randomly cropping the high res and low res images. It then upscales the LR image bicubicly and is fed into the network, where it tries to minimize MSE loss.  
+
+**July 26th 2023**
+The SRCNN results look like it's just blurring the bicubic interpolation on the mild blur set which i strange. When I tried with with bicubic degradation it doesn't seem to change much, which leads me to think there might be some bug in my code or data loading pipeline? Very confused.

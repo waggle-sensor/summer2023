@@ -109,3 +109,6 @@ Trained a preliminary SRCNN model. It trains by randomly cropping the high res a
 
 **July 26th 2023**
 The SRCNN results look like it's just blurring the bicubic interpolation on the mild blur set which i strange. When I tried with with bicubic degradation it doesn't seem to change much, which leads me to think there might be some bug in my code or data loading pipeline? Very confused.
+
+**July 27th 2023**
+Mostly worked on getting my two lightning talks ready. Also published my classifier plugin on ECR and polished my snow science blog. Not quite done with it but it's a lot closer than yesterday!

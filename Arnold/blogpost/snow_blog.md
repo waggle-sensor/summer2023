@@ -23,9 +23,7 @@ The theory behind transfer learning is that ResNet50 has already learned to enco
 ## Results
 The classifier was able to detect snow incredibly accurately from images collected from W014 and W083.
 ![confusion matrix](badrivermatrix.png)
-However, we wanted to ensure that the model wasn't completely overfitting to the images from these nodes and was actually learning something about snow. I also tested it on images from a node in Montana (W084). It didn't perform quite as well, but still performed accurately enough to indicate that it wasn't totally overfitting.
-![W084 confusion matrix](w084matrix.png)
-Currently the plugin is released to be used at the Bad River W083 node as it's not fit to be a general snow 
+However, we wanted to ensure that the model wasn't completely overfitting to the images from these nodes and was actually learning something about snow. I also tested it on images from a node in Montana (W084). It didn't perform quite as well, but still performed accurately enough to indicate that it wasn't totally overfitting That being said, currently the plugin is released to be used at the Bad River W083 node as it's not fit to be a general snow classifier quite yet.
 
 ## Future Steps
 

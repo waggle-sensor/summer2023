@@ -112,3 +112,15 @@ The SRCNN results look like it's just blurring the bicubic interpolation on the 
 
 **July 27th 2023**
 Mostly worked on getting my two lightning talks ready. Also published my classifier plugin on ECR and polished my snow science blog. Not quite done with it but it's a lot closer than yesterday!
+
+**July 28th 2023**
+Refined my two talks and got feedback at the meaning. Didn't need to make too many changes, but wanted to practice to make sure I had them down.
+
+**July 31st 2023**
+Some technical difficulties were a little frustrating with my presentation but I thought overall it went alright. Definitely would have been better to be there in person but did the best I could given the circumstances.
+
+**August 1st 2023**
+Found a good street sign/street dataset to use and wrote a script to downscale all the images to create pairs for training. The script took a very long time (much longer than expected) but I got a start on my SR blog post in the meantime in preparation for Thursday.
+
+**August 2nd 2023**
+Got my dataset and model uploaded to LCRC and finished up my blog post for SR. The traffic dataset doesn't look like it's working super well, but I found a dataset called TextZoom that I cannot for the life of me figure out how to download

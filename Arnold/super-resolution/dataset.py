@@ -11,19 +11,19 @@ class Dataset(torch.utils.data.Dataset):
         self.start_num = start_num
         self.sf = scale_factor
         self.crop = crop
-    
+        self.file = ".jpg"
     def __len__(self):
         return len(os.listdir(self.hr_path))
     
     def __getitem__(self, idx):
-        idx = idx+self.start_num
+        # idx = idx+self.start_num
         name = str(idx)
-        if idx < 100:
-            name = '0'+name
-            if idx < 10:
-                name = '0'+name
-        hr = imread(os.path.join(self.hr_path, name + '.png'))
-        lr = imread(os.path.join(self.lr_path, name + '.png'))
+        # if idx < 100:
+        #     name = '0'+name
+        #     if idx < 10:
+        #         name = '0'+name
+        hr = imread(os.path.join(self.hr_path, name + self.file))
+        lr = imread(os.path.join(self.lr_path, name + self.file))
         hr = torch.tensor(hr).permute(2,0,1)
         lr = torch.tensor(lr).permute(2,0,1)
         if self.crop:

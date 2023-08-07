@@ -123,4 +123,14 @@ Some technical difficulties were a little frustrating with my presentation but I
 Found a good street sign/street dataset to use and wrote a script to downscale all the images to create pairs for training. The script took a very long time (much longer than expected) but I got a start on my SR blog post in the meantime in preparation for Thursday.
 
 **August 2nd 2023**
-Got my dataset and model uploaded to LCRC and finished up my blog post for SR. The traffic dataset doesn't look like it's working super well, but I found a dataset called TextZoom that I cannot for the life of me figure out how to download
+Got my dataset and model uploaded to LCRC and finished up my blog post for SR. The traffic dataset doesn't look like it's working super well, but I found a dataset called TextZoom that I cannot for the life of me figure out how to download it
+
+**August 3rd 2023**
+Ended up finding a better street sign dataset that's still relatively small so quicker to train on. It showed similar result to he DIV2K dataset, and the text that appeared was still just as blurry (if not more so) when compared to the bicubic upscaling. I think taking a more NLP based approach might be need for the text applications. Not sure how much time I have to really dive deep into those applications but I can start at the very least.
+
+**August 4th 2023**
+Trained one last model using SRCNN but found similar results even with a lower LR and more epochs. It's frustrating that there's basically no visual improvement but it can't be helped. 
+
+Looked into OCR (optical character recognition) to improve capturing text from these images. I've found a few datasets to look at (COCO-text, ICDAR, etc https://paperswithcode.com/datasets?task=scene-text-detection&page=1) but KAIST seems to be pretty good one. It has both word and character elvel annotations that I can use for both parts of the pipeline.Just need to work on converting the XML annotation files to a text file that yolo can understand which is a pain but doable.
+
+Looks like general pipeline is object detection to find the various words in the image then a transformer/RNN to actually decipher what the word/number is. Not sure how much time I'll have to really dig into it but plan to have a meeting early next week to figure it out.

@@ -19,6 +19,7 @@ def main():
         error = np.abs(Real_command-Computed_command)
         error[0] = error[0]%360
         print('error: ', error)
+        return np.all(error <= np.array([0.1, 0.1, 0.1]))
         #assert(np.all(a+c==b))
 
     number_of_commands = 50
@@ -43,10 +44,12 @@ def main():
     for (pan, tilt, zoom) in zip(PAN, TILT, ZOOM):
         Camera1.relative_control(pan=pan, tilt=tilt, zoom=zoom)
         second_position = Camera1.requesting_cameras_position_information()
-        check_integrity(first_position, (pan, tilt, zoom), second_position)
-        #time.sleep(1.0)
-        Camera1.snap_shot('Image.jpg')
-        #time.sleep(1.0)
+        if check_integrity(first_position, (pan, tilt, zoom), second_position):
+            #time.sleep(1.0)
+            print('SNAPSHOT!!!!')
+            Camera1.snap_shot('Image.jpg')
+            #time.sleep(1.0)
+
         first_position = second_position
 
     Camera1.absolute_control(1, 1, 1)

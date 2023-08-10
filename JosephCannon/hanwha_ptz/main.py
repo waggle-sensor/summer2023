@@ -2,6 +2,7 @@
 #sys.path.append("/app/source")
 
 import time
+import datetime
 
 import numpy as np
 
@@ -9,20 +10,22 @@ from source import sunapi_control
 from source import sunapi_config
 #from source import ubnt_edgeswitch
 
+
+def set_random_position(camera):
+    pan_pos=np.random.randint(0,360)
+    tilt_pos=np.random.randint(-20,90)
+    zoom_pos=np.random.randint(0,10)
+    camera.absolute_control(float(pan_pos), float(tilt_pos), float(zoom_pos))
+
+def grab_image(camera):
+    position = camera.requesting_cameras_position_information()
+    pos_str = str(position[0])+','+str(position[1])+','+str(position[2])+' '
+    # ct stores current time
+    ct = str(datetime.datetime.now()) 
+    camera.snap_shot(pos_str + ct + '.jpg')
+
 def main():
-
-    def check_integrity(pos_a, ptz_com, pos_b):
-        POS_a = np.array(pos_a)
-        POS_b = np.array(pos_b)
-        Real_command = np.array(ptz_com)
-        Computed_command = POS_b-POS_a
-        error = np.abs(Real_command-Computed_command)
-        error[0] = error[0]%360
-        print('error: ', error)
-        return np.all(error <= np.array([0.1, 0.1, 0.1]))
-        #assert(np.all(a+c==b))
-
-    number_of_commands = 50
+    number_of_commands = 10
     Camera1 = sunapi_control.CameraControl('10.31.81.17', 'dario', 'Why1Not@')
     Camera1.absolute_control(1, 1, 1)
 
@@ -40,17 +43,16 @@ def main():
     PAN=np.random.choice(pan_values, number_of_commands)
     TILT=np.random.choice(tilt_values, number_of_commands)
     ZOOM=np.random.choice(zoom_values, number_of_commands)
-    first_position = Camera1.requesting_cameras_position_information()
+    set_random_position(camera=Camera1)
+    grab_image(camera=Camera1)
+
     for (pan, tilt, zoom) in zip(PAN, TILT, ZOOM):
         Camera1.relative_control(pan=pan, tilt=tilt, zoom=zoom)
-        second_position = Camera1.requesting_cameras_position_information()
-        if check_integrity(first_position, (pan, tilt, zoom), second_position):
-            #time.sleep(1.0)
-            print('SNAPSHOT!!!!')
-            Camera1.snap_shot('Image.jpg')
-            #time.sleep(1.0)
+        grab_image(camera=Camera1)
+        if np.random.rand() > 0.5:
+            set_random_position(camera=Camera1)
+            grab_image(camera=Camera1)
 
-        first_position = second_position
 
     Camera1.absolute_control(1, 1, 1)
     print('DONE!')

@@ -61,7 +61,8 @@ def publish_images():
 
 
 def main():
-    number_of_commands = 10
+    iterations = 20
+    number_of_commands = 20
     Camera1 = sunapi_control.CameraControl('10.31.81.17', 'dario', 'Why1Not@')
     Camera1.absolute_control(1, 1, 1)
 
@@ -76,23 +77,24 @@ def main():
     zoom_values = np.array([-0.2,-0.1,0,0.1,0.2])
     zoom_values = zoom_values*zoom_modulation
     
-    PAN=np.random.choice(pan_values, number_of_commands)
-    TILT=np.random.choice(tilt_values, number_of_commands)
-    ZOOM=np.random.choice(zoom_values, number_of_commands)
-    set_random_position(camera=Camera1)
-    grab_image(camera=Camera1)
-
-    for (pan, tilt, zoom) in zip(PAN, TILT, ZOOM):
-        Camera1.relative_control(pan=pan, tilt=tilt, zoom=zoom)
+    for iteration in range(iterations):
+        PAN=np.random.choice(pan_values, number_of_commands)
+        TILT=np.random.choice(tilt_values, number_of_commands)
+        ZOOM=np.random.choice(zoom_values, number_of_commands)
+        set_random_position(camera=Camera1)
         grab_image(camera=Camera1)
-        if np.random.rand() > 0.85:
-            set_random_position(camera=Camera1)
-            grab_image(camera=Camera1)
 
+        for (pan, tilt, zoom) in zip(PAN, TILT, ZOOM):
+            Camera1.relative_control(pan=pan, tilt=tilt, zoom=zoom)
+            grab_image(camera=Camera1)
+            #if np.random.rand() > 0.85:
+            #    set_random_position(camera=Camera1)
+            #    grab_image(camera=Camera1)
+
+
+        publish_images()
 
     Camera1.absolute_control(1, 1, 1)
-    publish_images()
-
     print('DONE!')
 
 if __name__ == "__main__":

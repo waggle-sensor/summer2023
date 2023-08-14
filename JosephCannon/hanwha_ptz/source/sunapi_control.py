@@ -688,8 +688,8 @@ class CameraControl:
             idx = string.rfind('/')  # remove name of .py file from end of string
             if (idx != -1):  # only do this if '/' is found in directory
                 string = string[:idx + 1]  # remove characters until '/' is reached
-            directory = string + time.strftime('%b_%d_%Y_%H_%M_%S_') + '.jpg'  # concatenate 'snapshots' directory with '.jpg' as this is where the image will be saved on the local machine
-
+            # concatenate snapshots' directory with (date&time) and '.jpg' as this is where the image will be saved on the local machine
+            directory = string + time.strftime('%b_%d_%Y_%H_%M_%S_') + '.jpg'
         # Save image in a set directory
         if resp.status_code == 200:
             with open(directory, 'wb') as f:

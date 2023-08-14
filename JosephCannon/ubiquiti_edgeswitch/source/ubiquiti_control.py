@@ -4,16 +4,15 @@ pretty.install()
 
 client = SSHClient()
 #LOAD HOST KEYS
-#client.load_host_keys('~/.ssh/known_hosts')
-# client.load_host_keys('/home/waggle/.ssh/known_hosts')
 client.load_system_host_keys()
 
 #Known_host policy
 client.set_missing_host_key_policy(AutoAddPolicy())
 
 
-#client.connect('10.31.81.2', username='ubnt', password='password')
-client.connect('10.31.81.2', username='ubnt', password='')
+#client.connect('host', username='username', password='password')
+client.connect('10.31.81.2', username='ubnt', password='why1not2', look_for_keys=False,
+               allow_agent=False)
 
 
 # Run a command (execute PHP interpreter)
@@ -24,7 +23,7 @@ print(type(stdout))
 print(type(stderr))
 
 # Optionally, send data via STDIN, and shutdown when done
-stdin.write('enable\npassword\n?\nq\nconfigure\ninterface 0/1\npoe opmode auto\n')
+stdin.write('show ?\n')
 # poe opmode shutdown
 # poe opmode auto
 stdin.channel.shutdown_write()

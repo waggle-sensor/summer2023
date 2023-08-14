@@ -9,6 +9,7 @@ import os.path
 import traceback
 import subprocess
 
+import argparse
 
 import numpy as np
 
@@ -19,10 +20,13 @@ from source import sunapi_config
 from waggle.plugin import Plugin
 
 def set_random_position(camera):
-    pan_pos=np.random.randint(0,360)
-    tilt_pos=np.random.randint(-20,90)
-    zoom_pos=np.random.randint(0,2)
-    camera.absolute_control(float(pan_pos), float(tilt_pos), float(zoom_pos))
+    status=1
+    while status != 0:
+        pan_pos=np.random.randint(0,360)
+        tilt_pos=np.random.randint(-20,90)
+        zoom_pos=np.random.randint(0,2)
+        status=camera.absolute_control(float(pan_pos), float(tilt_pos), float(zoom_pos))
+        time.sleep(1)
 
 def grab_image(camera):
     position = camera.requesting_cameras_position_information()
@@ -61,10 +65,23 @@ def publish_images():
 
 
 def main():
-    iterations = 20
-    number_of_commands = 20
+
+    parser = argparse.ArgumentParser("PTZ sampler")
+    parser.add_argument("-it", "--iterations", help="An integer with the number of iterations (PTZ rounds) to be run (default=10).", type=int, default=10)
+    parser.add_argument("-mv", "--movements", help="An integer with the number of movements in each PTZ round to be run (default=10).", type=int, default=10)
+    args = parser.parse_args()
+
+
+
+    iterations = args.iterations
+    number_of_commands = args.movements
+
     Camera1 = sunapi_control.CameraControl('10.31.81.17', 'dario', 'Why1Not@')
-    Camera1.absolute_control(1, 1, 1)
+
+    status = 1
+    while status != 0:
+        status=Camera1.absolute_control(1, 1, 1)
+        time.sleep(1)
 
     pan_modulation = 2
     tilt_modulation = 2
@@ -94,7 +111,11 @@ def main():
 
         publish_images()
 
-    Camera1.absolute_control(1, 1, 1)
+    status = 1
+    while status != 0:
+        status=Camera1.absolute_control(1, 1, 1)
+        time.sleep(1)
+
     print('DONE!')
 
 if __name__ == "__main__":

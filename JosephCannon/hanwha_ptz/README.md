@@ -39,14 +39,14 @@ Camera1.relative_control(pan=80)
 ### Sunapi Control
 
 *	`absolute_control(pan, tilt, zoom)` - Operation to move Pan, Tilt, or Zoom to an absolute destination.
-	-	pan (float): pans the device relative to the (0,0) position. Values (0.0, ... 360.0)
-	-	tilt (float): tilts the device relative to the (0,0) position. Values(-20.0, ... 90.0)
-	-	zoom (float): zooms the device n steps. Values (1.0, ... 40.0)
+	-	pan (int): pans the device relative to the 0 position in increments of 0.1. Values (0.0, ... 360.0)
+	-	tilt (int): tilts the device relative to the 0 position in increments of 0.1. Values(-20.0, ... 90.0)
+	-	zoom (int): zooms the device n steps relative to 1x in increments of 0.1. Values (1.0, ... 40.0)
 	
 *	`relative_control(pan, tilt, zoom)` - Operation to move Pan, Tilt, or Zoom to a destination relative to current position.
-	-	pan (float): pans the device relative to the current position. Values (-360.0, ... 360.0)
-	-	tilt (float): tilts the device relative to the current position. Values(-110.0, ... 110.0)
-	-	zoom (float): zooms the device n steps from current zoom position. Values (-40.0, ... 40.0)
+	-	pan (int): pans the device relative to the current position in increments of 0.1. Values (-360.0, ... 360.0)
+	-	tilt (int): tilts the device relative to the current position in increments of 0.1. Values(-110.0, ... 110.0)
+	-	zoom (int): zooms the device n steps from the current zoom position in increments of 0.1. Values (-40.0, ... 40.0)
 
 *	`continuous_control(normalized_speed, pan, tilt, zoom)` - Operation for continuous Pan, Tilt, and Zoom movements.
 	-	normalized_speed (bool): Enables or disables the normalized speed range for Pan, Tilt, and Zoom. If normalized_speed is not sent, or set as False, the Pan, Tilt, and Zoom speed
@@ -57,7 +57,7 @@ range will be device dependent values; If normalized_speed is set as True, the s
 	
 *	`stop_control()` - Operation to stop ongoing Pan, Tilt, and Zoom movements
 
-*	`area_zoom(x1, x2, y1, y2, tilewidth, tileheight)` - Operation zooms in on an area specified by boundaries x1 (int) and x2 (int), as well as y1 (int) to y2 (int). The default pixel dimensions are 10,000 by 10,000. The upper-left corner of the image is the (0, 0) position and the bottom-right corner of the image is the (10,000, 10,000) position. Changes can be made by adjusting the tilewidth (int) and tileheight (int). Can only zoom in on an area at a minimum of 50 by 50 pixels in dimension.
+*	`area_zoom(x1, x2, y1, y2, tilewidth, tileheight)` - Operation zooms in on an area specified by boundaries x1 (int) and x2 (int), as well as y1 (int) to y2 (int). The default dimensions are 10,000 by 10,000. The upper-left corner of the image is the (0, 0) position and the bottom-right corner of the image is the (10,000, 10,000) position. Changes can be made by adjusting the tilewidth (int) and tileheight (int). Can only zoom in on an area at a minimum of 50 by 50 pixels in dimension.
 
 *	`movement_control(direction, movespeed)` - Continuously moves the device in the specified direction.
 	-	direction (str): Offered directions 'home', 'up', 'down', 'left', 'right', 'upleft', 'upright', 'downleft', 'downright'
@@ -78,12 +78,30 @@ range will be device dependent values; If normalized_speed is set as True, the s
 	
 *	`attributes_information()` - Opens a webbrowser and returns the url link of the atttributes information for the connected device.
 
-*	`swing_control(channel)` - Swings from one preset to another.
+*	`swing_control(channel, mode)` - Swings from one preset to another.
 	-	channel (int): Select channel to issue the swing command
+	-	mode (str): Choose whether to Pan, Tilt, or PanTilt to next preset location
+
+*	`group_control(channel, group, mode)` - Groups presets in listed order.
+	-	channel (int): Select channel to issue the group command
+	-	group (int): Select a group sequence that exists in the channel
+	-	mode (str): Choose whether to "Start" or "Stop"
+	
+*	`tour_control(channel, tour, mode)` - Tours groups in listed order.
+	-	channel (int): Select channel to issue the tour command
+	-	tour (int): Select a trace action that has been set in channel
+	-	mode (str): Choose whether to "Start" or "Stop"
+
+*	`trace_control(channel, tour, mode)` - Trace action.
+	-	channel (int): Select channel to issue the trace command
+	-	trace (int): Select a trace
+	-	mode (str): Choose mode to either "Start" or "Stop". Starting a trace action will begin recording the movements of a device. Stopping a trace action means finishing memorzing the trace of the movements of the device.
 	
 *	`applications()` - Returns the installed applications information
 
-
+*	`snap_shot(directory)` - Takes a snapshot.
+	-	directory (str): Select a directory to save the snapshot. If a directory is not passed in a Linux or MacOs machine, the picture will be saved to the snapshots folder in "hanwha_ptz".
+	
 # From Terminal
 
 Here are some examples of how to use the Sunapi from terminal for the XNP-6400RW PTZ camera:
@@ -95,9 +113,9 @@ Here are some examples of how to use the Sunapi from terminal for the XNP-6400RW
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
+- $ python3 sunapi_control.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ap 20
+- $ python3 sunapi_control.py -ip <Device IP> -un <username> -pw <password> -ap 20
 ````
 
 ### Relative Tilt -30&deg; 
@@ -105,9 +123,9 @@ In terminal write:
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --relative_Tilt -30
+- $ python3 sunapi_control.py --ipAddress <Device IP> --username <username> --password <password> --relative_Tilt -30
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -rt -30
+- $ python3 sunapi_control.py -ip <Device IP> -un <username> -pw <password> -rt -30
 ````
 
 ### Continuous control of Pan at a movement speed of 5
@@ -115,9 +133,9 @@ In terminal write:
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --continuous_control_Pan 5
+- $ python3 sunapi_control.py --ipAddress <Device IP> --username <username> --password <password> --continuous_control_Pan False 5
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ccp 5
+- $ python3 sunapi_control.py -ip <Device IP> -un <username> -pw <password> -ccp False 5
 ````
 
 ### Pan to the absolute position of pan 20&deg;
@@ -125,9 +143,9 @@ In terminal write:
 In terminal write:
 ````
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
+- $ python3 sunapi_control.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -ap 20
+- $ python3 sunapi_control.py -ip <Device IP> -un <username> -pw <password> -ap 20
 ````
 
 ### Stop all action;
@@ -135,12 +153,22 @@ In terminal write:
 In terminal write:
 
 - In long form:
-- $ python3 main.py --ipAddress <Device IP> --username <username> --password <password> --Stop
+- $ python3 sunapi_control.py --ipAddress <Device IP> --username <username> --password <password> --Stop
 - In short form:
-- $ python3 main.py -ip <Device IP> -un <username> -pw <password> -s
+- $ python3 sunapi_control.py -ip <Device IP> -un <username> -pw <password> -s
 ````
 ###Disclaimers:
 
 In terminal:
+
+- It is possible to send more than one command at a time.
+
+In terminal write:
+````
+- In long form:
+- $ python3 sunapi_control.py --ipAddress <Device IP> --username <username> --password <password> --absolute_Pan 20 --relative_Pan 210 --continuous_control_Pan False 3
+- In short form:
+- $ python3 sunapi_control.py -ip <Device IP> -un <username> -pw <password> -ap 20 -rp 210 -ccp False 3
+````
 
 - If camera is in continuous move, user must send stop command before doing a relative move. It is also recommended for an absolute command, area zoom, etc.

@@ -481,7 +481,7 @@ class CameraControl:
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'home', 'action': 'control',
                                                        'Channel': channel})
 
-    def requesting_cameras_position_information(self):
+    def requesting_cameras_position_information(self, show: str = None):
         """
         Operation to request PTZ status.
 
@@ -495,8 +495,11 @@ class CameraControl:
         tilt = float(resp.text.split()[1].split('=')[1])
         zoom = float(resp.text.split()[2].split('=')[1])
         ptz_list = (pan, tilt, zoom)
-        print(resp.text)
-        print(ptz_list)
+
+        if show:
+            print(resp.text)
+            print(ptz_list)
+
         return ptz_list
 
     def moving_to_preset_position(self, preset: int = None, presetname: str = None):
@@ -694,8 +697,9 @@ class CameraControl:
             idx = string.rfind('/')  # remove name of .py file from end of string
             if (idx != -1):  # only do this if '/' is found in directory
                 string = string[:idx + 1]  # remove characters until '/' is reached
-            directory = string + time.strftime('%b_%d_%Y_%H_%M_%S_') + '.jpg'  # concatenate 'snapshots' directory with '.jpg' as this is where the image will be saved on the local machine
-
+            # concatenate snapshots' directory with (date&time) and '.jpg' as this is where the image will be saved on the local machine
+            directory = string + time.strftime('%b_%d_%Y_%H_%M_%S_') + '.jpg'
+            print(directory)
         # Save image in a set directory
         if resp.status_code == 200:
             with open(directory, 'wb') as f:

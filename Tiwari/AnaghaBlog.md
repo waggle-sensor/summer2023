@@ -2,6 +2,8 @@
 
 #### Here, I will write daily updates for the work done on the Waggle-Sensor project, specifically in understanding feasibility of Waggle sensors in anayzing traffic flow and concentration of ride-sharing vehicles through the streets of Chicago.
 
+#### [Rideshare-Detection Plugin Repo](https://github.com/AnaghaTiwari/plugin-rideshare)
+
 <br/>
 
 <details>
@@ -504,5 +506,441 @@ Other:
   * GPU ran out for both accounts :( hoping to get ALCF GPU access soon!
 
 </details>
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> June 28, 2023 </summary>
+
+### June 28, 2023
+  
+  **Goal:** Finetune YoloV8 hyperparameters, test other Yolo models
+  
+ Changed epochs & batchsize for YoloV8, starting creating new YoloNAS model
+    
+  * To increase mAP @ 95% (and recall/precision), changed batch size to 64 and 128 (for training and validation)
+    * Updated model precision and validation only increased by less than 0.05
+  * May have to train model for 100-200 epochs (after GPU allocated)
+  * Coded new Yolo-NAS M model using predefined/pretrained COCO weights, and finetuned on custom data, trained for 50 epochs
+    * Very high recall (but low precision)
+    * Recall@0.50 = `0.9688`, but Recall@0.50:0.95 = `0.5367`, which is much higher than YolOV8
+  * May have to run model for higher number of epochs with different batch sizes (or try Yolo_NAS L)
+   
+</details>
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> June 30, 2023 </summary>
+
+### June 30, 2023
+  
+  **Goal:** Train new Yolo_NAS L model
+  
+ Trained new Yolo_NAS L (instead of Yolo_NAS M) model on custom data
+    
+  * Larger Yolo_NAS version was finetuned on custom data and trained for 25 epochs (may have to train for 50 later on)
+    * Very low precision, but high recall (Recall@0.50 = `0.9922` and Map@0.50 = `0.9413`) for training stage
+  * Model was able to detect Uber/TNP stickers on cars that no previous models were able to identify (even for vehicles with 2/3 stickers)
+  * Yolo_NAS L had a much higher performance with less training (# of epochs) than both YoloV8 and YOLO_NAS M
+  * Goal for Monday: finetune hyperparameters for Yolo_NAS L latest model to increase precision and f1 score at higher confidence levels
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 3, 2023 </summary>
+
+### July 3, 2023
+  
+  **Goal:** Started on Sage NSF Video
+  
+ Started working on introduction clips for Sage NSF Video
+    
+  * Used Adobe Premiero Pro to edit and download Argonne video clips and create introduction video
+  * Will record intern spotlights and staff panel by next week.
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 5, 2023 </summary>
+
+### July 5, 2023
+  
+  **Goal:** Trained Yolo-NAS L model with noise dataset
+  
+ Used previous Yolo_NAS_L model weights and finetuned with noise dataset
+    
+  * Used previous Yolo_NAS_L model weights (customed trained with rideshare vehicle dataset)
+  * Trained for 25 epochs with noise dataset from Chicago nodes (and augmented darkened rideshare stickers)
+  * F1 score a bit lower than previous Yolo_NAS_L model (trained with clear images), but will test on clear images and expect a higher overall accuracy
+  * Problems with CPU/GPU weights (may have to convert images using torch transformations before using them for evaluation)
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 6, 2023 </summary>
+
+### July 6, 2023
+  
+  **Goal:** Adjusted Hyperparameters of Yolo-NAS models, and compared results
+  
+ Adjusted and finetuned hyperparameters for Yolo_Nas models
+    
+  * Trained Yolo-NAS-L model for 100 epochs with noise dataset to see improvement in model accuracy
+    * Adjusting model + training for longer period did not significantly improve mAP @ 50% 
+  * Adjusted batch sizes of Yolo_NAS-L model (again, no significant improvement)
+  * Accuracy for Yolo_NAS_L model trained with noisy images had a TP rate of `0.42` for rideshare vehicles (for noisy dataset), but significantly lower TP rate for clear images
+
+Other:
+  * Attended 5G workshop!     
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 7, 2023 </summary>
+
+### July 7, 2023
+  
+  **Goal:** Finetuned Hyperparameters for YoloV8 model
+  
+ Adjusted and finetuned parameters for YoloV8 (trained with noise) model
+    
+  * Developed tensorboard logs for Yolo-NAS (both M and L, with and without noise) and YoloV8 models, and saw YoloV8 model had highest F1 Accuracy score
+    * YolOV8 model with noise had mAP @ 50% confidence of `0.883` and mAP @ 95% confidence of `0.451` (training with noise increased mAP by ~0.1)
+  * Adjusted batch sizes of YoloV8 model to 32, 64, adjusted image transformations (shear, rotate, scale,...), and changed learning rate hyperparameters
+    * Again, saw no significant improvement in model performance after hyperparameter changes
+  * Recorded 4 intern video clips for Sage video!
+
+Other:
+  * Will have to start writing research paper and creating poster soon!     
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 10, 2023 </summary>
+
+### July 10, 2023
+  
+  **Goal:** Started working on new approach for improving model performance: creating new dataset
+  
+ Created python script to create new dataset of rideshare stickers using node images
+    
+  * Used custom-trained YoloV8 model (trained with clear + noise images on custom augmented dataset) to identify rideshare vehicles from Chicago node images
+  * Used YoloV8 predict's `save_crop` feature to crop and save predicted stickers (enclosed in bounding boxes) 
+    * Every 700 pics = ~50 stickers
+  * Will process node pictures to collect around 2000 stickers for another dataset
+    * Goal: Train YoloV8 model in another stage with new model-generated-dataste and see if accuracy is improved with 2-stage training process 
+
+Other:
+  * Attended Bob's Poster workshop for tips in creating an effective research poster/presentation
+  * Sage Panel will be taking place on July 18
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 11, 2023 </summary>
+
+### July 11, 2023
+  
+  **Goal:** Finish creating new dataset using model_1 predictions
+  
+ Created python script to scrape through Chicago node images and save rideshare stickers
+    
+  * Downloaded around 5000-6000 images from Chicago nodes to collect around 260 rideshare stickers
+  * Spent day downloading node images and filtering rideshare stickers for new dataset
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 12, 2023 </summary>
+
+### July 12, 2023
+  
+  **Goal:** Create and train model2 on new rideshare dataset
+  
+ Train new model and see if improvements in accuracy/performance
+    
+  * Used Model1 weights to finetune and train Model2 using new dataset
+    * Trained for ~100 epochs -> ~70 epochs to avoid overfitting
+  * Tested on zoomed-in rideshare stickers, led to very high accuracy (m@P @ 95% of `0.954`)
+    * Tested model2 on regular (street) images, very low accuracy (m@P @ 95% of `0.000154`)
+  * Tried finetuning hyperparameters but led to no improvements (regular pictures too small to detect rideshare stickers)
+  * Goal for tomorrow: see if 2 stage model filter system leads to higher accuracy 
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 13, 2023 </summary>
+
+### July 13, 2023
+  
+  **Goal:** Developed 2 stage model filter system to zoom in to possible rideshare stickers
+  
+ Used 2 YoloV8 models to identify rideshare stickers from full-sized camera images
+    
+  * Used Model1 weights to initially detect possible stickers from camera node images
+  * Saved model1 predictions and detected possible rideshare stickers from Model2 weights
+  * Developed python script to evaluate testing images on the 2-stage model system
+    * 2-Stage system was able to identify 50 out of 56 rideshare sticker images correctly (`~90%` accuracy) 
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 14, 2023 </summary>
+
+### July 14, 2023
+  
+  **Goal:** Set up Plugin-Rideshare repo
+  
+ Initial set-up and prep for plugin-rideshare app!
+    
+  * Forked plugin-numpy-example to create own plugin-rideshare
+    * Included necessary ECR media, Sage.yaml file, and Dockerfile  
+  * Started to formulate Dockerfile with necessary libraries, added model weights
+  * In process of getting LCRC account set up
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 17, 2023 </summary>
+
+### July 17, 2023
+  
+  **Goal:** Set up LCRC account to store model weights files
+  
+ Accessed LCRC account to add necessary files on Dockerfile for plugin-repo
+    
+  * Stored model1 and model2 `best.pt` weights to add onto plugin `app.py` dockerfile
+    * Included necessary ECR media, Sage.yaml file, and Dockerfile  
+  * Started to formulate Dockerfile with necessary libraries, added model weights
+  * Started work on `app.py` plugin file
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 18, 2023 </summary>
+
+### July 18, 2023
+  
+  **Goal:** Worked on `app.py` plugin file
+  
+ Wrote preprocess and postprocess functions
+    
+  * In `app.py` file, wrote `preprocess` function to prepare video frame image for stage1 model detection
+  * Used numpy and opencv image augmentation libraries to resize video frame amd make it a suitable input for YoloV8 model
+  * Wrote `postprocess` function to analyze output detection results
+    * Traverse through results and boxes object returned by YoloV8 model to collect detected class name, timestamp, and cropped image
+    * Used `plugin.publish` to print out # of rideshare stickers detected at specific timestamp
+    * Published detected cropped rideshare sticker to ECR 
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 19, 2023 </summary>
+
+### July 19, 2023
+  
+  **Goal:** Worked on `app.py` plugin file
+  
+ Wrote detect function for plugin app
+    
+  * Wrote "detect" function for app, using Model1 and Model2 weights
+    * Added model weights onto Dockerfile through LCRC
+  * First wrote and tested stage1 model detections
+    * Function received sample image from camera frame, preprocessed image, then fed image into model1 for sticker detection
+  * Debugged app file 
+      
+
+Other:
+  * Edited Sage NSF video
+
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 20, 2023 </summary>
+
+### July 20, 2023
+  
+  **Goal:** Worked on `app.py` plugin file
+  
+ Wrote main function, formulated Sage.yaml file
+    
+  * In `app.py` file, wrote `main` function with "YoloV8" object attributes
+  * Wrote Sage.yaml file with necessary plugin information and descriptions
+  * Asked Yongho for testing node access
+
+Other:
+  * Edited Sage NSF video
+  * Finished SULI Poster (also involved feedback from research group)
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 21, 2023 </summary>
+
+### July 21, 2023
+  
+  **Goal:** Debugged and tested plugin
+  
+ Received W023 node access for plugin testing 
+    
+  * Created Sage account for ssh node access
+    * Developed ssh key and input into Sage account/portal
+  *  Created GitHub repo for app with proper documents needed for testing
+  *  Started testing on W023 node
+    * Debugged app.py main plugin file and Dockerfile
+    * YoloV8 library not installing through Dockerfile? (Goal for tomorrow)
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
+
+
+<br/>
+
+
+
+<details>
+<summary> July 24, 2023 </summary>
+
+### July 24, 2023
+  
+  **Goal:** Finished app.py plugin
+  
+ Tested app.py plugin file, and evaluated algorithm with dummy testing image
+    
+  * Debugged plugin while testing on null inputs (no rideshare stickers detected)
+    * YoloV8 library not installing due to older version of Python running on Nvidia GPU in Waggle nodes (YoloV8 requires latest version Python 3.7) -> for now, model will run on Raspberry Pi
+  * Updated file with 2 stage model system
+    * App will now receive predictions from Model1 and again detect for rideshare stickers using Model2 weights
+  * Used testing image to test and debug app
+  * Rewrote app to accept constant video stream as input and feed frames from stream rather than fixed image to models
+
+Other:
+  * Edited Sage NSF video
+
+</details>
+
+
 
 

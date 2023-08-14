@@ -2,6 +2,115 @@
 
 Link to my [meeting notes](https://docs.google.com/document/d/1LRnpN_eE1WZ5-LrI0CYndENyy3PiCGERJvU9nurvOXs/edit?usp=sharing)
 
+## Week 07/03 -- 07/09
+
+### 07/07 Fri
+
+- Met with Dario and made a plan for next steps. The plan is on overleaf.
+- Downloading more images, and optimized the downloading workflow
+- Model trained with smaller images can be used to evaluate larger images.
+- Build a workflow for contrastive learning. (Model design, training, testing and validating)
+
+### 07/06 Thu
+
+- Based on what have been achieved, we need to narrow down the scope and focus on some science cases
+- Had another discussion with Dario and Bhupendra, here are the discussion details:
+- Science case: cloud
+  - altitude, texture of the clouds
+  - color usually doesn't matter, so will use Greyscale+IR (1-ch + 1-ch) image pairs
+  - narrow down to look at sky images only
+  - Look at attention map and check what clouds the models are paying attention to
+  - Bhupendra has a framework for motion data for cloud, might look into that.
+- **Issue**: after 07/04, all ANL nodes should not be used for analysis because of some hardware alternations.
+
+
+### 07/05 Wed
+
+- Attended the talk on `pyCOMPSS` framework. The framework can simplify the parallelization and deployment.
+Another library `dislib` on distributed computing was introduced as well.
+- Discussed with Dario and had following suggestions:
+  - KNN classification to compare RGB+IR and RGB+Greyscale to understand how the knowledge learned by these two frameworks
+  - Relative position of objects in an image should not matter as the model was trained to learn objects rather than positions.
+  - Next step: use random crop and flip to augment the images preventing models from cheating on using positions to do clustering
+  - The crop and flip must be synchronous among RGB and IR or Greyscale images to ensure they contain relatively similar information.
+    (field of view, objects in the image)
+- Color might not be important so we might use Greyscale+IR for a new model
+- New project on all-sky camera: SAGE nodes have fisheye cameras that we can use.
+
+
+### 07/04 Tue
+
+Independence day, no work
+
+### 07/03 Mon
+
+- Checked the model training was finished.
+- Start the evaluation.
+
+
+## Week 06/26 -- 07/02
+
+### 06/30 Fri
+
+- Had another discussion on evaluating the model.
+  - It's possible that the model might be learning the pointing rather than the content of the image (i.e., poles, sky)
+  - Have to understand what mapping between RGB and IR the model learned.
+  - To compare what is learned, start another model to compare RGB+Greyscale images.
+  - The greyscale image is composed from RGB only.
+- Started the RGB + Greyscale model training and well perform evaluation later.
+
+### 06/29 Thu
+
+Get-together, no work
+
+### 06/28 Wed
+
+- Attended the LANS seminar on low-precision mathematic-hardware. The idea is very interesting -- by introducing
+stochastic rounding (i.e., probabilistically round up or down or zero or nearest). Improve the stagnation point and dynamic range by a lot!
+- Analyzed the clustering and got attention maps based on our discussion yesterday. The result still looks pretty similar as expected. Because
+we are minimizing the loss from two branches. 
+- Discussed with my research advisor at Wyoming about my research here at ANL and communicated with Dario about potential application of 
+self-supervised learning in astronomy. An idea is to combine photometry and spectroscopy information together through contrastive learning.
+
+### 06/27 Tue
+
+- Had another discussion with Dario and here are things to do:
+  - Use Silhouettes score to check clustering method score
+  - build clusters and check visually what the clustering is doing
+  - model evaluation and inference
+  - add pairs to tSNE plots and then evaluate a small batch of the files by eye
+  - add intermediate checkpoint for model training to understand the evolution of position of points in the clustering
+  - With Bhupendra: have another experiment with two PCA and cluster on RGB and IR individually. Then, comparing the results 
+  with another instance that has single PCA and clustering fitting on RGB+IR together. This comparison can be used to understand
+  the "closeness" of two models on inference
+- Calculated embeddings with `vitsmall_rgb16_ir8_bs128_ep150` model.
+- Clustering with `vit_rgb16_ir4_bs128_ep150`, result is shown below. The result is incredible as the separation between different 
+categories of images is very clear and the relationships between image pairs have been learned as well.
+
+<img src="./plots/vit_image.png" alt="isolated" width="400"/>
+<img src="./plots/vit_all_clusters.png" alt="isolated" width="400"/>
+
+### 06/26 Mon
+
+- Had a deep discussion with Dario and Bhupendra about the scope of the project and potential deliverables
+  - Current goal: **understand what a RGB model learned from the IR model counterpart**
+  - Two aspect to consider:
+    1. the common features RGB and IR models both learned.
+    2. the mapping from RGB image to IR image learned by models. (This is important because IR images are less available than RGB images)
+  - To evaluate models based on the above two criterions, need to have following steps:
+      1. narrow down the scope: train and test images with certain features (i.e., night time images, sky images, cloud images)
+      2. cluster the images
+         1. if labeled data available, apply the same clustering on labeled data to understand some physical meaning of the cluster
+         2. if no labeled data, try some meta-analysis with the information from node (location, node number, sky position, local time -> day, night)
+  - some deliverables:
+    - Object segementation and detection
+    - cloud characteristics
+      - thick and thin clouds?
+      - object differentiation, sky vs. ground
+    - other unexpected results from clustering
+  - Additional idea to understand RGB vs. IR model: use an identical framework + model to train RGB + RGB pair. Where the second 
+  RGB image, converted to grayscale image, replaces the paired IR image but remains the same shape and resolution as IR image
+- Issue to resolve: data cannot be fitted in memory for analysis task due to too many (~100,000) embedding vectors
 
 ## Week 06/19 -- 06/25
 

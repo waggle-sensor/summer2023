@@ -151,6 +151,8 @@ class CameraControl:
         finished_position = pan + tilt + zoom  # given values for the finished position
 
         i = int()
+        
+        output_status = 0
 
         start_time = time.time()
 
@@ -169,6 +171,7 @@ class CameraControl:
 
                 if i == 5:  # if the current_position and final_position have been the same for five times in a row
                     print('end of command error')
+                    output_status = 1
                     break  # break the loop
 
             time.sleep(1)
@@ -191,6 +194,7 @@ class CameraControl:
 
                 if i == 5:  # if the current_zoom_pulse and final_zoom_pulse have been the same for five times in a row
                     print('end of command error')
+                    output_status = 1
                     break  # break the loop
 
             time.sleep(0.5)
@@ -202,6 +206,8 @@ class CameraControl:
         elapsed_time = end_time - start_time
 
         print("elapsed_time: " + str(elapsed_time))
+
+        return output_status
 
     def relative_control(self, pan: float = None, tilt: float = None, zoom: int = None, zoom_pulse: int = None,
                          channel: int = None):

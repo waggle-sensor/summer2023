@@ -489,8 +489,8 @@ class CameraControl:
         tilt = float(resp.text.split()[1].split('=')[1])
         zoom = float(resp.text.split()[2].split('=')[1])
         ptz_list = (pan, tilt, zoom)
-        print(resp.text)
-        print(ptz_list)
+        # print(resp.text)
+        # print(ptz_list)
         return ptz_list
 
     def moving_to_preset_position(self, preset: int = None, presetname: str = None):
@@ -690,6 +690,7 @@ class CameraControl:
                 string = string[:idx + 1]  # remove characters until '/' is reached
             # concatenate snapshots' directory with (date&time) and '.jpg' as this is where the image will be saved on the local machine
             directory = string + time.strftime('%b_%d_%Y_%H_%M_%S_') + '.jpg'
+            print(directory)
         # Save image in a set directory
         if resp.status_code == 200:
             with open(directory, 'wb') as f:

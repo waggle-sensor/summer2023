@@ -481,7 +481,7 @@ class CameraControl:
         return self._camera_command('ptzcontrol.cgi', {'msubmenu': 'home', 'action': 'control',
                                                        'Channel': channel})
 
-    def requesting_cameras_position_information(self):
+    def requesting_cameras_position_information(self, show: str = None):
         """
         Operation to request PTZ status.
 
@@ -495,8 +495,11 @@ class CameraControl:
         tilt = float(resp.text.split()[1].split('=')[1])
         zoom = float(resp.text.split()[2].split('=')[1])
         ptz_list = (pan, tilt, zoom)
-        # print(resp.text)
-        # print(ptz_list)
+
+        if show:
+            print(resp.text)
+            print(ptz_list)
+
         return ptz_list
 
     def moving_to_preset_position(self, preset: int = None, presetname: str = None):

@@ -3,6 +3,7 @@ Hello! My name is Alex Arnold and I am a rising senior studying computer science
 
 ## The Data
 Two waggle nodes were collecting both images and other data from the Bad River in the past year. The W014 waggle node was collecting data in 2022 up until December when it went offline, In January a second node (W083) started collecting images pointing at essentially the same spot. This gaves me a collection of 3500 images to work with. Luckily about half of them had snow of some kind and half didn't so there weren't any major class imbalance problems. One of the big decisions I had to make was when to count an image as having snow. Did a few patches count? Did a light dusting of snow count? In the end I elected to count _any_ snow on the ground to simplify the problem.
+
 ![W014](W014.jpg)
 
 ![Wo83](W083.jpg)
@@ -16,6 +17,7 @@ First, the images needed to be preprocessed and transformed. One problem snow de
 Our goal was to create a machine learning model that could detect whether there was snow on the ground around the river. Convolutional neural networks are the main tool of choice for these kind of tasks. They work by using a sliding "window" across an image to capture relationships and patterns between pixels across the image. There are already a multitude of pretrained convolutional network models out there that perform well on object detection tasks, but there aren't any deep learning models trained specifically for snow detection. Luckily _transfer learning_ comes to the rescue to make training a new model incredibly easy with limited time and computational power. 
 
 Transfer learning works by taking an object detection model that someone else has already taken the time to train reusing it for a new purpose. I utilized ResNet50 [1], a popular convolutional neural network model that pioneered a technique called residual connections. Residual connections allow neural networks optimize more easily and quickly while still being deep enough to capture complex relationships. ResNet50 is a very deep network with fifty layers (hence the name) and would take a lot of time and computing power to train even with residual connections, but luckily there are free pretrained models that are essentially plug and play with some small modifications. A visualization of ResNet50's architecture is seen below [2].
+
 ![ResNet50 Model (without additional layers)](ResNet50.png)
 
 The theory behind transfer learning is that ResNet50 has already learned to encode certain aspects of an image  that are generalizable, so all it needs is a few changes to use those lower level features to create a new prediction. To turn the model into a snow detector, I tacked on a couple extra linear layers at the end to generate a prediction score for whether there is snow or not. This vastly sped up training time compared to creating a whole new model.

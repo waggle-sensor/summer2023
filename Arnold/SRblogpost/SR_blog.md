@@ -21,15 +21,12 @@ There isn't a way to numerically test this model's performance on the images col
 
 <img src="measuringsticks.png" alt="measuring sticks" width="300"/>
 
-
 ## Use for Object Detection
 
 The other use case I tested was for detecting rideshare stickers. Another project this summer worked on training a YOLOv8 model to detect rideshare stickers on cars and had already been running for several weeks to generate a dataset of potential new rideshare stickers. I hypothesized that due the super resolution would be able to either recreate features of the stickers or make the already available features easier for the model to detect. This is should lead to the model having higher confidence scores that an object either is or isn't a rideshare sticker. I used ZSSR to create copies of the images with twice the resolution and used the same model for each to see if the confidence of predictions changed. Unfortunately, the confidence of the model was almost identical regardless. Good news is, the super resolution process didn't seem to degrade the information in the image but it also didn't improve performance. 
 
 ## What's next?
 One major problem that could be at play here is how object detection models tend to be trained. Models work best when trained on a specific image size, which means the models were best when the input images are that size even when the model could accept any size. If these models were to be retrained on larger images they may be able to fully utilize these larger super resolution images in a way current models can't. In it's current state these methods aren't quite ready for deployment, but with all the recent advances in super resolution it could be here soon!
-
-
 
 ## References
 [1] A. Shocher, N. Cohen and M. Irani, "Zero-Shot Super-Resolution Using Deep Internal Learning," 2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition, Salt Lake City, UT, USA, 2018, pp. 3118-3126, doi: 10.1109/CVPR.2018.00329.

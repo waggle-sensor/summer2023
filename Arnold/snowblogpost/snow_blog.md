@@ -2,12 +2,12 @@
 Hello! My name is Alex Arnold and I am a rising senior studying computer science and cogntiive science at Northwestern University. This summer I worked with the Sage team to analyze images from the Bad River site in northern Wisconsin. Ice and snowfall are incredibly important parts of a river ecosystem. The Bad River is home to wild rice, which is a very tempramental. Having a snow classifier can be used to create a larger dataset for snow that can be used for these purposes.
 
 ## The Data
-Two waggle nodes were collecting both images and other data from the Bad River in the past year. The W014 waggle node was collecting data in 2022 up until December when it went offline, In January a second node (W083) started collecting images pointing at essentially the same spot. This gaves me a collection of 3500 images to work with. Luckily about half of them had snow of some kind and half didn't so there weren't any major class imbalance problems. 
+Two waggle nodes were collecting both images and other data from the Bad River in the past year. The W014 waggle node was collecting data in 2022 up until December when it went offline, In January a second node (W083) started collecting images pointing at essentially the same spot. This gaves me a collection of 3500 images to work with. Luckily about half of them had snow of some kind and half didn't so there weren't any major class imbalance problems. One of the big decisions I had to make was when to count an image as having snow. Did a few patches count? Did a light dusting of snow count? In the end I elected to count _any_ snow on the ground to simplify the problem.
 ![W014](W014.jpg)
 
 ![Wo83](W083.jpg)
 
-The nodes took a picture once every hour, so some images were at night and too dark to see. Images where it couldn't discerned whether there was snow or not (snow fell at night at an unclear time) were discarded from the dataset. Darker images were still included if I could confirm that they contained snow.
+The nodes took a picture once every hour, so some images were at night and too dark to see. Images where it couldn't discerned whether there was snow or not (snow fell at night at an unclear time) were discarded from the dataset. Darker images were still included if I could confirm that they contained snow. 
 
 ## Approach
 
@@ -27,7 +27,7 @@ However, we wanted to ensure that the model wasn't completely overfitting to the
 
 ## Future Steps
 
-Sadly we weren't able to get additional data from the Bad River, but additional work could look at using these images to predict turbidity data and other information about the river. This could be used to facilitate and predict wild rice yields as well. More data from other waggle nodes could also be used to create a more general snow classifier that could be used at other locations with more confidence, as for now it's best only at the Bad River site. 
+We weren't able to get additional data from the Bad River, but additional work could look at using these images to predict turbidity data and other information about the river. This could be used to facilitate and predict wild rice yields as well. More data from other waggle nodes could also be used to create a more general snow classifier that could be used at other locations with more confidence, but for now it's best only at the Bad River site. 
 
 ## Citations
 [1] K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image recognition,” 2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2016. doi:10.1109/cvpr.2016.90 

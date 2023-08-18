@@ -8,7 +8,8 @@ Hello, my name is Alex Shen, and I am a incoming second year undergraduate stude
 In the data preprocessing stage we created a csv file that stored all the images to their matching solar irradiance values. The images were taken from the Sage Waggle Node's top camera and the solar irradiance values were taken from the Argonne National Laboratory tower readings. We made sure to exclude night time photos since there is no sun and we exclusively used summer-time photos as we wanted to stick to a seasonal model that would be able to make estimates more consistently. Furthermore we also eventually downsized the images original 2000x2000 images to 500x500 images since the training was taking a bit too long when the images were larger.
 
 ![alt text](https://github.com/AlexShen21/example_images/blob/b59b13ede783a2601ef7a0bee47b89c8e62db4fb/1655423969884923771-sample.jpg)
-                                                <font size="1"> Example Image </font> .
+                                                    *example image*
+
 
 
 # Training and Model

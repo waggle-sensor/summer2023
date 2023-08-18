@@ -18,7 +18,11 @@ In our training, before the image was transformed to a tensor, the image was res
 # Graphs
 ![alt text](https://github.com/AlexShen21/example_images/blob/c19899c565d475ed3c3347c8cf1d4c1742dc7c35/Screenshot%202023-08-18%20at%2011.16.20%20AM.png)
 
+<br>
+
 _Graph showing the # of times that each margin of error appeared in our tesing images. For example, the model predicting 10 when the irradiance is 20 would result in an error of 10, raising the first bar of the bar graph 1 occurence higher_
+
+<br>
 
 ![alt text](https://github.com/AlexShen21/example_images/blob/c19899c565d475ed3c3347c8cf1d4c1742dc7c35/Screenshot%202023-08-18%20at%2011.16.47%20AM.png)
 

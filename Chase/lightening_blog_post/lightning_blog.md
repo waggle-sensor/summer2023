@@ -16,7 +16,7 @@ Thunderstorms have very turbulent environments. Strong updrafts and downdrafts o
 When that charge threshold is reached, the strength of the electric field overpowers the atmosphere's insulating properties, and lightning results. The electric field within the storm is not the only one that develops. Below the negatively charged storm base, positive charge begins to pool within the surface of the earth. This positive charge will shadow the storm wherever it goes, and is responsible for cloud-to-ground lightning.
 
 
-<p align="center"> <img src="lightening.png" width="900"> </p>
+<p align="center"> <img src="lightning.png" width="700"> </p>
 
 Some lightning originates in the cirrus anvil or upper parts near the top of the thunderstorm, where a high positive charge resides. Lightning that forms in this region follows the same scenario as previously described, but the descending stepped leader will carry a positive charge while its subsequent ground streamers will have a negative charge. These bolts are known as "positive lightning" because there is a net transfer of positive charge from the cloud to the ground.
 
@@ -29,7 +29,7 @@ Positive lightning makes up less than 5% of all strikes. However, despite a sign
 
 In terms of predicting and forecasting wildfire caused by lightning strike, we employed a software-defined radio (SDR) to collect data about negative and postive lightning. So we built a weatherproofed SDR box that could be connected to a Waggle/Sage node. The radio generates 10 MB/s data.
 
-<p align="center"> <img src="lightning1.jpg" width="500"> <img src="lightning2.jpg" width="500"> </p>
+<p align="center"> <img src="lightning1.jpg" width="250"> <img src="lightning2.jpg" width="250"> </p>
 
 As a preliminary result, we were able to recieve a distinguishable signal.
 

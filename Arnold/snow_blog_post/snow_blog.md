@@ -1,12 +1,11 @@
 # Snow classifier
 
-## Introduction
 Ice and snowfall are incredibly important parts of a river ecosystem. The Bad River is home to wild rice, which is very temperamental and prone to natural boom/bust years. Having a snow classifier can be used to create a larger dataset of snow that can be used for a variety of these additional tasks including assisting with predicting wild rice yields.
 
 ## The Data
 Two Waggle/Sage nodes were collecting both images and other data from the Bad River in 2022-2023 winter. The one node (W014) was collecting data in 2022 up until December when it went offline, in January a second node (W083) started collecting images pointing at essentially the same spot. This gave me a collection of 3500 images to work with. About half of them had snow of some kind and half did not so there weren't any major class imbalance problems. One of the big decisions we had to make was when to count an image as having snow. Did a few patches count? Did a light dusting of snow count? In the end, we elected to count _any_ snow on the ground to simplify the problem. The two images below are from W014 and W083 respectively.
 
-![W014](W014.jpg) ![Wo83](W083.jpg)
+<p align="center"> <img src="W014.jpg" width="500"> <img src="W083.jpg" width="500"> </p>
 
 The nodes took a picture once every hour, so some images were at night and too dark to see. Images where we couldn't discern whether there was snow or not (snow fell at night at an unclear time) were discarded from the dataset. Darker images were still included if we could confirm that they contained snow. 
 
@@ -25,7 +24,7 @@ The theory behind transfer learning is that ResNet50 has already learned to enco
 ## Results
 The classifier was able to detect snow incredibly accurately from images collected from W014 and W083 (left confusion matrix). However, we wanted to ensure that the model wasn't completely overfitting to the images from these nodes and was learning something about snow. We also tested it on images from a node in Montana (W084). It didn't perform quite as well but still performed accurately enough to indicate that it wasn't overfitting horrendously (right confusion matrix). That being said, currently, the plugin is released to be used at the Bad River W083 node as it's not fit to be a general snow classifier quite yet.
 
-![confusion matrix -- on Bad river data](badriver_confusion_matrix.png) ![confusion matrix -- on Montana data](montana_confusion_matrix.png)
+<p align="center"> <img src="badriver_confusion_matrix.png" width="350"> <img src="montana_confusion_matrix.png" width="360"> </p>
 
 ## Future Steps
 

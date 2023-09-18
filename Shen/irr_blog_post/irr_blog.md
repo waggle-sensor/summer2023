@@ -16,19 +16,12 @@ A Waggle/Sage node were collecting sky images from Argonne Weather Observatory f
 <p align="center"> <img src="irr_distribution.png" width="500"> </p> 
 
 # Training and Model
-In our training, before the image was transformed to a tensor, the image was resized down to 224x224 to stay consistent with the pre-trained models. The image was also randomly flipped with a 50% chance and rotated randomly between 0-359 degrees so the model would be able to generalize better. For our model we compared the  pre-trained ResNet models (ResNet18, ResNet38, and ResNet50) and the VGG-16 model. However we replaced the last fully connected layer so that the model would give us a continuous value as an estimate instead of a range. We found that the ResNet 50 model performed the best with the lowest mean absolute error of 82.
+In our training, before the image was transformed to a tensor, the image was resized down to 224x224 to stay consistent with the pre-trained models. The image was also randomly flipped with a 50% chance and rotated randomly between 0-359 degrees so the model would be able to generalize better. For our model we compared the  pre-trained ResNet models (ResNet18, ResNet38, and ResNet50) and the VGG-16 model. However we replaced the last fully connected layer so that the model would give us a continuous value as an estimate instead of a range. We found that the ResNet 50 model performed the best with the lowest mean absolute error of 82. Graph on the left is showing the number of times that each margin of error appeared in our testing images. And right is showing the predicted irradiance of the test images against its actual irradiance value. The dots on the right plot are centering mostly around the line of $y=x$, meaning the model is predicting accurately on average. Also since there are points both above and below the line the model is not biased towards either overestimating or underestimating also causing it to predict well on average.
 
-![alt text](https://github.com/AlexShen21/example_images/blob/c19899c565d475ed3c3347c8cf1d4c1742dc7c35/Screenshot%202023-08-18%20at%2011.16.20%20AM.png)
-
-<br>
-
-_Graph showing the # of times that each margin of error appeared in our testing images. For example, the model predicting 10 when the irradiance is 20 would result in an error of 10, raising the first bar of the bar graph 1 occurance higher_
-
-<br>
-
-![alt text](https://github.com/AlexShen21/example_images/blob/c19899c565d475ed3c3347c8cf1d4c1742dc7c35/Screenshot%202023-08-18%20at%2011.16.47%20AM.png)
-
-_This graph plots the predicted irradiance of a test image against its actual irradiance value. The dots are centering mostly around the y=x line meaning the model is predicting accurately on average. Also since there are points both above and below the line the model is not biased towards either overestimating or underestimating also causing it to predict well on average_
+<p align="center">
+<img src="https://github.com/AlexShen21/example_images/blob/c19899c565d475ed3c3347c8cf1d4c1742dc7c35/Screenshot%202023-08-18%20at%2011.16.20%20AM.png" width="485">
+<img src="https://github.com/AlexShen21/example_images/blob/c19899c565d475ed3c3347c8cf1d4c1742dc7c35/Screenshot%202023-08-18%20at%2011.16.47%20AM.png" width="520">
+</p>
 
 ## Future Steps
 

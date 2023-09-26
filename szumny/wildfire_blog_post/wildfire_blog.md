@@ -21,7 +21,7 @@ We trained the models with the three different class groups and compared perform
 
 We found that the best results are when sky, ground, and horizon are grouped together as other, and smoke and cloud are left separate. In our case, the most important indicator is FNR because our goal is to reduce false wildfire alarm when this application is deployed at the area where they have mideum to high possibility of occuring wildfires and support local fire departments and foreset preservers for rapid response. As you can see in the table, it is very distinctive that the FNR is very low on VGG16 with 3 classes -- smoke, cloud, and other.
 
-<p align="center"> <img src="smoke_test_result.png" width="1000"> </p>
+<p align="center"> <img src="smoke_test_result.png" width="980"> </p>
 
 
 We wanted to ensure that the model wasn't completely overfitting to the HPWREN images but learnt something about smoke and cloud. So we also tested it on images from ond of ARM data collection sites to test the models with different background such as sky, ground, and horizon. The bar graph above is showing the classification result of each patches using original test images, which we also generated from HPWREN data, and ARM data. Must keep in mind that the burning event was not very obvious in the ARM testing data, but it won’t always be cut and clear, so it is a great test to see which model perform best with the least.

@@ -16,20 +16,20 @@ Because there is no public dataset about rideshare vehicles or rideshare sticker
 
 We set a two-stage detection framework because of small size and changing light conditions because they make it challenging to detect rideshare stickers. Two-stage model filter system we used for this project, 1) detects vehicles which have high possiblity of recognized as rideshare vehicle using a YOLO v8 model that trained with the dataset we manually generated and crop the vehicles, and 2) confirming presence of rideshare stickers on the vehicles using the same YOLO v8. Because we extracted only part of image where highly impact on determining existance of rideshare sticker from the first stage, we can use comparatively high resolution rideshare sticker images (or vehicle images which would contain a rideshare sticker) as inputs for the second stage, and this increase confidence level of the detection.
 
-<p align="center"> <img src="rideshare_stages.png" width="500"> </p>
+<p align="center"> <img src="rideshare_stages.png" width="1000"> </p>
 
 
 ## Results
 
-<p align="center"> <img src="rideshare_result.png" width="350"> </p>
+<p align="center"> <img src="rideshare_result.png" width="1000"> </p>
 
 The detector was able to detect rideshare stickers with about 90% accuracy within the two-stage model. In addition to detect rideshare stickers, we made this application report the number of detected rideshare stickers in a scene and crop the possible area where is recognized as rideshare stickers. Below are the ones that the detector reported as rideshare stickers.
 
-<p align="center"> <img src="rideshare_detection.png" width="350"> </p>
+<p align="center"> <img src="rideshare_detection.png" width="1000"> </p>
 
 ## Future Steps
 
 We weren't able to use real rideshare sticker images, but additional work could look at using these images to increase (or replace) training data. This dataset extracted from real images could improve detection accuracy and confidence level. In addition, we can examine if deep neural network can identify type of rideshare stickers. With this novel rideshare vehicle image dataset and an application and to use this data more informative way, we need to come up with metrics to analyze density, speed, and average stopover time of rideshare vehicles in the area where high flow of rideshare vehicles are expected. We are expecting that this application supports data-driven decision-making for transportation and ity management, infrastructure planning, rideshare companies, and airport logistics.
 
-<p align="center"> <img src="rideshare_goal.png" width="350"> </p>
+<p align="center"> <img src="rideshare_goal.png" width="1000"> </p>
 

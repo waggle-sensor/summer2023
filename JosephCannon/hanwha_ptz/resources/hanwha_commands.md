@@ -26,7 +26,7 @@ _**Syntax:** http://<Device IP>/stw-cgi/ptzcontrol.cgi?msubmenu=query&action=vie
 http://camera-ptz-rgb-hanwha/stw-cgi/ptzcontrol.cgi?msubmenu=query&action=view&Query=Pan,Tilt,Zoom
 ```
 #### ATTRIBUTES INFORMATION:
-_**Syntax:** http://<Device IP>/stw-cgi/attributes.cgi
+_**Syntax:** http://<Device IP>/stw-cgi/attributes.cgi_
 ```
 http://camera-ptz-rgb-hanwha/stw-cgi/attributes.cgi
 ```
